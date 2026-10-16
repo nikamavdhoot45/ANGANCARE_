@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "222792318640",
+    "project_id": "angancare-2d054",
+    "storage_bucket": "angancare-2d054.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222792318640:android:4b3e9f4c9a444de55f0575",
+        "android_client_info": {
+          "package_name": "com.example.first_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAWGd6Lq_sPnAsezpelzOP5RD2MKud1HI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
