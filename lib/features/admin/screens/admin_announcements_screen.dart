@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class AdminAnnouncementsScreen extends StatefulWidget {
   const AdminAnnouncementsScreen({super.key});
@@ -12,8 +12,7 @@ class AdminAnnouncementsScreen extends StatefulWidget {
       _AdminAnnouncementsScreenState();
 }
 
-class _AdminAnnouncementsScreenState
-    extends State<AdminAnnouncementsScreen> {
+class _AdminAnnouncementsScreenState extends State<AdminAnnouncementsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool isLoading = true;
@@ -31,13 +30,12 @@ class _AdminAnnouncementsScreenState
   ];
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       return marathi;
@@ -51,9 +49,9 @@ class _AdminAnnouncementsScreenState
   }
 
   String _typeText(
-      BuildContext context,
-      String type,
-      ) {
+    BuildContext context,
+    String type,
+  ) {
     switch (type.toLowerCase()) {
       case 'holiday':
         return _t(
@@ -125,9 +123,9 @@ class _AdminAnnouncementsScreenState
       final snapshot = await _firestore
           .collection('announcements')
           .orderBy(
-        'scheduledAt',
-        descending: true,
-      )
+            'scheduledAt',
+            descending: true,
+          )
           .get();
 
       final loaded = snapshot.docs.map((doc) {
@@ -190,9 +188,9 @@ class _AdminAnnouncementsScreenState
       builder: (dialogContext) {
         return StatefulBuilder(
           builder: (
-              context,
-              setDialogState,
-              ) {
+            context,
+            setDialogState,
+          ) {
             return AlertDialog(
               title: Text(
                 _t(
@@ -224,8 +222,7 @@ class _AdminAnnouncementsScreenState
                           color: Color(0xFFF45170),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       items: announcementTypes.map((type) {
@@ -252,14 +249,14 @@ class _AdminAnnouncementsScreenState
                       onChanged: dialogSaving
                           ? null
                           : (value) {
-                        if (value == null) {
-                          return;
-                        }
+                              if (value == null) {
+                                return;
+                              }
 
-                        setDialogState(() {
-                          selectedType = value;
-                        });
-                      },
+                              setDialogState(() {
+                                selectedType = value;
+                              });
+                            },
                     ),
                     const SizedBox(height: 14),
                     TextField(
@@ -283,8 +280,7 @@ class _AdminAnnouncementsScreenState
                           color: Color(0xFFF45170),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
@@ -307,16 +303,14 @@ class _AdminAnnouncementsScreenState
                           'घोषणा का संदेश दर्ज करें',
                         ),
                         prefixIcon: const Padding(
-                          padding:
-                          EdgeInsets.only(bottom: 65),
+                          padding: EdgeInsets.only(bottom: 65),
                           child: Icon(
                             Icons.message_outlined,
                             color: Color(0xFFF45170),
                           ),
                         ),
                         border: OutlineInputBorder(
-                          borderRadius:
-                          BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                     ),
@@ -345,39 +339,33 @@ class _AdminAnnouncementsScreenState
                             onPressed: dialogSaving
                                 ? null
                                 : () async {
-                              final pickedDate =
-                              await showDatePicker(
-                                context: context,
-                                initialDate:
-                                selectedDate,
-                                firstDate:
-                                DateTime.now(),
-                                lastDate:
-                                DateTime.now().add(
-                                  const Duration(
-                                    days: 365,
-                                  ),
-                                ),
-                              );
+                                    final pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: selectedDate,
+                                      firstDate: DateTime.now(),
+                                      lastDate: DateTime.now().add(
+                                        const Duration(
+                                          days: 365,
+                                        ),
+                                      ),
+                                    );
 
-                              if (pickedDate ==
-                                  null) {
-                                return;
-                              }
+                                    if (pickedDate == null) {
+                                      return;
+                                    }
 
-                              setDialogState(() {
-                                selectedDate =
-                                    pickedDate;
-                              });
-                            },
+                                    setDialogState(() {
+                                      selectedDate = pickedDate;
+                                    });
+                                  },
                             icon: const Icon(
                               Icons.calendar_today_outlined,
                               size: 18,
                             ),
                             label: Text(
                               '${selectedDate.day}/'
-                                  '${selectedDate.month}/'
-                                  '${selectedDate.year}',
+                              '${selectedDate.month}/'
+                              '${selectedDate.year}',
                             ),
                           ),
                         ),
@@ -387,23 +375,19 @@ class _AdminAnnouncementsScreenState
                             onPressed: dialogSaving
                                 ? null
                                 : () async {
-                              final pickedTime =
-                              await showTimePicker(
-                                context: context,
-                                initialTime:
-                                selectedTime,
-                              );
+                                    final pickedTime = await showTimePicker(
+                                      context: context,
+                                      initialTime: selectedTime,
+                                    );
 
-                              if (pickedTime ==
-                                  null) {
-                                return;
-                              }
+                                    if (pickedTime == null) {
+                                      return;
+                                    }
 
-                              setDialogState(() {
-                                selectedTime =
-                                    pickedTime;
-                              });
-                            },
+                                    setDialogState(() {
+                                      selectedTime = pickedTime;
+                                    });
+                                  },
                             icon: const Icon(
                               Icons.access_time,
                               size: 18,
@@ -423,11 +407,11 @@ class _AdminAnnouncementsScreenState
                   onPressed: dialogSaving
                       ? null
                       : () {
-                    Navigator.pop(
-                      dialogContext,
-                      false,
-                    );
-                  },
+                          Navigator.pop(
+                            dialogContext,
+                            false,
+                          );
+                        },
                   child: Text(
                     _t(
                       context,
@@ -444,120 +428,107 @@ class _AdminAnnouncementsScreenState
                   onPressed: dialogSaving
                       ? null
                       : () async {
-                    final title =
-                    titleController.text.trim();
+                          final title = titleController.text.trim();
 
-                    final message =
-                    messageController.text.trim();
+                          final message = messageController.text.trim();
 
-                    if (title.isEmpty ||
-                        message.isEmpty) {
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            _t(
-                              context,
-                              'Please enter title and message.',
-                              'कृपया शीर्षक आणि संदेश प्रविष्ट करा.',
-                              'कृपया शीर्षक और संदेश दर्ज करें।',
-                            ),
-                          ),
-                          backgroundColor:
-                          Colors.red,
-                        ),
-                      );
-                      return;
-                    }
+                          if (title.isEmpty || message.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  _t(
+                                    context,
+                                    'Please enter title and message.',
+                                    'कृपया शीर्षक आणि संदेश प्रविष्ट करा.',
+                                    'कृपया शीर्षक और संदेश दर्ज करें।',
+                                  ),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
 
-                    setDialogState(() {
-                      dialogSaving = true;
-                    });
+                          setDialogState(() {
+                            dialogSaving = true;
+                          });
 
-                    final scheduledAt = DateTime(
-                      selectedDate.year,
-                      selectedDate.month,
-                      selectedDate.day,
-                      selectedTime.hour,
-                      selectedTime.minute,
-                    );
+                          final scheduledAt = DateTime(
+                            selectedDate.year,
+                            selectedDate.month,
+                            selectedDate.day,
+                            selectedTime.hour,
+                            selectedTime.minute,
+                          );
 
-                    try {
-                      final user = FirebaseAuth
-                          .instance.currentUser;
+                          try {
+                            final user = FirebaseAuth.instance.currentUser;
 
-                      await _firestore
-                          .collection(
-                        'announcements',
-                      )
-                          .add({
-                        'title': title,
-                        'message': message,
-                        'type': selectedType,
-                        'scheduledAt':
-                        Timestamp.fromDate(
-                          scheduledAt,
-                        ),
-                        'createdAt':
-                        FieldValue
-                            .serverTimestamp(),
-                        'createdBy':
-                        user?.uid ?? '',
-                        'isActive': true,
-                      });
+                            await _firestore
+                                .collection(
+                              'announcements',
+                            )
+                                .add({
+                              'title': title,
+                              'message': message,
+                              'type': selectedType,
+                              'scheduledAt': Timestamp.fromDate(
+                                scheduledAt,
+                              ),
+                              'createdAt': FieldValue.serverTimestamp(),
+                              'createdBy': user?.uid ?? '',
+                              'isActive': true,
+                            });
 
-                      if (!context.mounted) {
-                        return;
-                      }
+                            if (!context.mounted) {
+                              return;
+                            }
 
-                      Navigator.pop(
-                        dialogContext,
-                        true,
-                      );
-                    } catch (e) {
-                      setDialogState(() {
-                        dialogSaving = false;
-                      });
+                            Navigator.pop(
+                              dialogContext,
+                              true,
+                            );
+                          } catch (e) {
+                            setDialogState(() {
+                              dialogSaving = false;
+                            });
 
-                      if (!context.mounted) {
-                        return;
-                      }
+                            if (!context.mounted) {
+                              return;
+                            }
 
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${_t(
-                              context,
-                              'Failed to create announcement.',
-                              'घोषणा तयार करता आली नाही.',
-                              'घोषणा बनाने में विफल।',
-                            )}\n$e',
-                          ),
-                          backgroundColor:
-                          Colors.red,
-                        ),
-                      );
-                    }
-                  },
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${_t(
+                                    context,
+                                    'Failed to create announcement.',
+                                    'घोषणा तयार करता आली नाही.',
+                                    'घोषणा बनाने में विफल।',
+                                  )}\n$e',
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                   child: dialogSaving
                       ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child:
-                    CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : Text(
-                    _t(
-                      context,
-                      'Publish',
-                      'प्रकाशित करा',
-                      'प्रकाशित करें',
-                    ),
-                  ),
+                          _t(
+                            context,
+                            'Publish',
+                            'प्रकाशित करा',
+                            'प्रकाशित करें',
+                          ),
+                        ),
                 ),
               ],
             );
@@ -593,14 +564,11 @@ class _AdminAnnouncementsScreenState
   }
 
   Future<void> _toggleAnnouncement(
-      String id,
-      bool currentStatus,
-      ) async {
+    String id,
+    bool currentStatus,
+  ) async {
     try {
-      await _firestore
-          .collection('announcements')
-          .doc(id)
-          .update({
+      await _firestore.collection('announcements').doc(id).update({
         'isActive': !currentStatus,
       });
 
@@ -688,10 +656,7 @@ class _AdminAnnouncementsScreenState
     }
 
     try {
-      await _firestore
-          .collection('announcements')
-          .doc(id)
-          .delete();
+      await _firestore.collection('announcements').doc(id).delete();
 
       await _loadAnnouncements();
 
@@ -774,8 +739,8 @@ class _AdminAnnouncementsScreenState
   }
 
   String _formatDateTime(
-      dynamic value,
-      ) {
+    dynamic value,
+  ) {
     if (value is! Timestamp) {
       return _t(
         context,
@@ -790,15 +755,12 @@ class _AdminAnnouncementsScreenState
     final hour = date.hour == 0
         ? 12
         : date.hour > 12
-        ? date.hour - 12
-        : date.hour;
+            ? date.hour - 12
+            : date.hour;
 
-    final minute =
-    date.minute.toString().padLeft(2, '0');
+    final minute = date.minute.toString().padLeft(2, '0');
 
-    final period = date.hour >= 12
-        ? 'PM'
-        : 'AM';
+    final period = date.hour >= 12 ? 'PM' : 'AM';
 
     return '${date.day}/${date.month}/${date.year} '
         '$hour:$minute $period';
@@ -824,8 +786,7 @@ class _AdminAnnouncementsScreenState
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-      floatingActionButton:
-      FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _createAnnouncement,
         backgroundColor: const Color(0xFFF45170),
         foregroundColor: Colors.white,
@@ -846,45 +807,35 @@ class _AdminAnnouncementsScreenState
         onRefresh: _loadAnnouncements,
         child: isLoading
             ? const Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFFF45170),
-          ),
-        )
+                child: CircularProgressIndicator(
+                  color: Color(0xFFF45170),
+                ),
+              )
             : announcements.isEmpty
-            ? _buildEmptyState()
-            : ListView.builder(
-          padding:
-          const EdgeInsets.all(16),
-          itemCount:
-          announcements.length,
-          itemBuilder:
-              (context, index) {
-            return _buildAnnouncementCard(
-              announcements[index],
-            );
-          },
-        ),
+                ? _buildEmptyState()
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: announcements.length,
+                    itemBuilder: (context, index) {
+                      return _buildAnnouncementCard(
+                        announcements[index],
+                      );
+                    },
+                  ),
       ),
     );
   }
 
   Widget _buildAnnouncementCard(
-      Map<String, dynamic> announcement,
-      ) {
-    final type =
-    (announcement['type'] ?? 'General')
-        .toString();
+    Map<String, dynamic> announcement,
+  ) {
+    final type = (announcement['type'] ?? 'General').toString();
 
-    final title =
-    (announcement['title'] ?? 'Announcement')
-        .toString();
+    final title = (announcement['title'] ?? 'Announcement').toString();
 
-    final message =
-    (announcement['message'] ?? '')
-        .toString();
+    final message = (announcement['message'] ?? '').toString();
 
-    final isActive =
-        announcement['isActive'] == true;
+    final isActive = announcement['isActive'] == true;
 
     final color = _getColor(type);
     final icon = _getIcon(type);
@@ -896,27 +847,22 @@ class _AdminAnnouncementsScreenState
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius:
-        BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(
           color: Colors.grey.shade200,
         ),
       ),
       child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
                 width: 44,
                 height: 44,
-                decoration:
-                BoxDecoration(
-                  color:
-                  color.withValues(alpha: 0.12),
-                  borderRadius:
-                  BorderRadius.circular(12),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
@@ -926,16 +872,13 @@ class _AdminAnnouncementsScreenState
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style:
-                      const TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
-                        fontWeight:
-                        FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -946,8 +889,7 @@ class _AdminAnnouncementsScreenState
                       ),
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight:
-                        FontWeight.w600,
+                        fontWeight: FontWeight.w600,
                         color: color,
                       ),
                     ),
@@ -956,8 +898,7 @@ class _AdminAnnouncementsScreenState
               ),
               PopupMenuButton<String>(
                 onSelected: (value) {
-                  final id =
-                  announcement['id'].toString();
+                  final id = announcement['id'].toString();
 
                   if (value == 'toggle') {
                     _toggleAnnouncement(
@@ -975,17 +916,17 @@ class _AdminAnnouncementsScreenState
                       child: Text(
                         isActive
                             ? _t(
-                          context,
-                          'Deactivate',
-                          'निष्क्रिय करा',
-                          'निष्क्रिय करें',
-                        )
+                                context,
+                                'Deactivate',
+                                'निष्क्रिय करा',
+                                'निष्क्रिय करें',
+                              )
                             : _t(
-                          context,
-                          'Activate',
-                          'सक्रिय करा',
-                          'सक्रिय करें',
-                        ),
+                                context,
+                                'Activate',
+                                'सक्रिय करा',
+                                'सक्रिय करें',
+                              ),
                       ),
                     ),
                     PopupMenuItem<String>(
@@ -1034,41 +975,36 @@ class _AdminAnnouncementsScreenState
                 ),
               ),
               Container(
-                padding:
-                const EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 8,
                   vertical: 4,
                 ),
-                decoration:
-                BoxDecoration(
-                  color: isActive
-                      ? const Color(0xFFE8F5E9)
-                      : Colors.grey.shade200,
-                  borderRadius:
-                  BorderRadius.circular(8),
+                decoration: BoxDecoration(
+                  color:
+                      isActive ? const Color(0xFFE8F5E9) : Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   isActive
                       ? _t(
-                    context,
-                    'Active',
-                    'सक्रिय',
-                    'सक्रिय',
-                  )
+                          context,
+                          'Active',
+                          'सक्रिय',
+                          'सक्रिय',
+                        )
                       : _t(
-                    context,
-                    'Inactive',
-                    'निष्क्रिय',
-                    'निष्क्रिय',
-                  ),
+                          context,
+                          'Inactive',
+                          'निष्क्रिय',
+                          'निष्क्रिय',
+                        ),
                   style: TextStyle(
                     fontSize: 10,
-                    fontWeight:
-                    FontWeight.w600,
+                    fontWeight: FontWeight.w600,
                     color: isActive
                         ? const Color(
-                      0xFF2E7D32,
-                    )
+                            0xFF2E7D32,
+                          )
                         : Colors.grey,
                   ),
                 ),
@@ -1082,18 +1018,15 @@ class _AdminAnnouncementsScreenState
 
   Widget _buildEmptyState() {
     return ListView(
-      physics:
-      const AlwaysScrollableScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.all(16),
       children: [
         const SizedBox(height: 80),
         Container(
-          padding:
-          const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius:
-            BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: Colors.grey.shade200,
             ),
@@ -1115,10 +1048,8 @@ class _AdminAnnouncementsScreenState
                 ),
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight:
-                  FontWeight.bold,
-                  color:
-                  Color(0xFF29266F),
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF29266F),
                 ),
               ),
               const SizedBox(height: 8),
@@ -1129,8 +1060,7 @@ class _AdminAnnouncementsScreenState
                   'सुट्ट्या, आरोग्य कार्यक्रम, आहार, लसीकरण, उपस्थिती किंवा इतर अंगणवाडी अपडेट्ससाठी घोषणा तयार करा.',
                   'छुट्टियों, स्वास्थ्य कार्यक्रमों, भोजन, टीकाकरण, उपस्थिति या अन्य आंगनवाड़ी अपडेट्स के लिए घोषणा बनाएँ।',
                 ),
-                textAlign:
-                TextAlign.center,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.grey,

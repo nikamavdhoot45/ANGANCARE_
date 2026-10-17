@@ -9,7 +9,7 @@
         }
       },
       "dart": {
-        "lib/firebase_options.dart": {
+        "lib/core/firebase_options.dart": {
           "projectId": "angancare-2d054",
           "configurations": {
             "android": "1:222792318640:android:4b3e9f4c9a444de55f0575",

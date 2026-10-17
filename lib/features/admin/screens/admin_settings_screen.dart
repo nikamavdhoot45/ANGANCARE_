@@ -2,16 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
-import '../main.dart';
-import 'login_screen.dart';
+import '../../../core/localization/app_localizations.dart';
+import '../../../main.dart';
+import '../../auth/screens/login_screen.dart';
 
 class AdminSettingsScreen extends StatefulWidget {
   const AdminSettingsScreen({super.key});
 
   @override
-  State<AdminSettingsScreen> createState() =>
-      _AdminSettingsScreenState();
+  State<AdminSettingsScreen> createState() => _AdminSettingsScreenState();
 }
 
 class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
@@ -22,13 +21,12 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       return marathi;
@@ -42,8 +40,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
   }
 
   String _languageName(BuildContext context) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       return 'मराठी';
@@ -72,8 +69,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
     if (user == null) return;
 
     try {
-      final document =
-      await _firestore.collection('users').doc(user.uid).get();
+      final document = await _firestore.collection('users').doc(user.uid).get();
 
       if (!document.exists) return;
 
@@ -103,8 +99,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
         selectedLanguage = languageName;
       });
 
-      final currentLanguage =
-          AppLocalizations.of(context).locale.languageCode;
+      final currentLanguage = AppLocalizations.of(context).locale.languageCode;
 
       if (currentLanguage != savedLanguage) {
         Locale savedLocale = const Locale('en');
@@ -170,7 +165,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
       MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       ),
-          (route) => false,
+      (route) => false,
     );
   }
 
@@ -188,9 +183,9 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
 
         return StatefulBuilder(
           builder: (
-              context,
-              setDialogState,
-              ) {
+            context,
+            setDialogState,
+          ) {
             return AlertDialog(
               title: Text(
                 localizations.selectLanguage,
@@ -309,9 +304,9 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
       builder: (dialogContext) {
         return StatefulBuilder(
           builder: (
-              context,
-              setDialogState,
-              ) {
+            context,
+            setDialogState,
+          ) {
             return AlertDialog(
               title: Text(
                 _t(
@@ -451,13 +446,12 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
                 ElevatedButton(
                   onPressed: () {
                     final currentPassword =
-                    currentPasswordController.text.trim();
+                        currentPasswordController.text.trim();
 
-                    final newPassword =
-                    newPasswordController.text.trim();
+                    final newPassword = newPasswordController.text.trim();
 
                     final confirmPassword =
-                    confirmPasswordController.text.trim();
+                        confirmPasswordController.text.trim();
 
                     if (currentPassword.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -656,8 +650,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
         'पासवर्ड बदलने में असमर्थ।',
       );
 
-      if (e.code == 'wrong-password' ||
-          e.code == 'invalid-credential') {
+      if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
         message = _t(
           context,
           'Current password is incorrect.',

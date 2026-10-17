@@ -1,10 +1,10 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
-import '../main.dart';
-import 'login_screen.dart';
+import '../../../core/localization/app_localizations.dart';
+import '../../../main.dart';
+import '../../auth/screens/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -21,8 +21,7 @@ class ProfileScreen extends StatelessWidget {
     final String email =
         user?.email ?? _t(context, 'noEmailAvailable', 'No email available');
 
-    final String workerName =
-    user?.displayName?.isNotEmpty == true
+    final String workerName = user?.displayName?.isNotEmpty == true
         ? user!.displayName!
         : _t(context, 'anganwadiWorker', 'Anganwadi Worker');
 
@@ -112,8 +111,7 @@ class ProfileScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                  const ChangePasswordScreen(),
+                  builder: (context) => const ChangePasswordScreen(),
                 ),
               );
             },
@@ -136,8 +134,7 @@ class ProfileScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                  const NotificationSettingsScreen(),
+                  builder: (context) => const NotificationSettingsScreen(),
                 ),
               );
             },
@@ -189,8 +186,7 @@ class ProfileScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                  const HelpSupportScreen(),
+                  builder: (context) => const HelpSupportScreen(),
                 ),
               );
             },
@@ -297,12 +293,12 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _profileOption(
-      BuildContext context, {
-        required IconData icon,
-        required String title,
-        required String subtitle,
-        required VoidCallback onTap,
-      }) {
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(15),
@@ -335,8 +331,7 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
@@ -369,8 +364,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _showLanguageDialog(BuildContext context) {
-    final currentLanguage =
-        AppLocalizations.of(context).locale.languageCode;
+    final currentLanguage = AppLocalizations.of(context).locale.languageCode;
 
     String selectedLanguage;
 
@@ -474,8 +468,7 @@ class ProfileScreen extends StatelessWidget {
                       newLocale = const Locale('hi');
                     }
 
-                    final user =
-                        FirebaseAuth.instance.currentUser;
+                    final user = FirebaseAuth.instance.currentUser;
 
                     if (user != null) {
                       await FirebaseFirestore.instance
@@ -608,10 +601,9 @@ class ProfileScreen extends StatelessWidget {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                    const LoginScreen(),
+                    builder: (context) => const LoginScreen(),
                   ),
-                      (route) => false,
+                  (route) => false,
                 );
               },
               child: Text(
@@ -633,18 +625,13 @@ class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  State<ChangePasswordScreen> createState() =>
-      _ChangePasswordScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState
-    extends State<ChangePasswordScreen> {
-  final currentPasswordController =
-  TextEditingController();
-  final newPasswordController =
-  TextEditingController();
-  final confirmPasswordController =
-  TextEditingController();
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final currentPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   bool hideCurrent = true;
   bool hideNew = true;
@@ -669,9 +656,7 @@ class _ChangePasswordScreenState
     final newPassword = newPasswordController.text;
     final confirm = confirmPasswordController.text;
 
-    if (current.isEmpty ||
-        newPassword.isEmpty ||
-        confirm.isEmpty) {
+    if (current.isEmpty || newPassword.isEmpty || confirm.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -778,8 +763,7 @@ class _ChangePasswordScreenState
         'Unable to change password.',
       );
 
-      if (e.code == 'wrong-password' ||
-          e.code == 'invalid-credential') {
+      if (e.code == 'wrong-password' || e.code == 'invalid-credential') {
         message = _t(
           'currentPasswordIncorrect',
           'Current password is incorrect.',
@@ -932,27 +916,26 @@ class _ChangePasswordScreenState
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed:
-                isLoading ? null : changePassword,
+                onPressed: isLoading ? null : changePassword,
                 child: isLoading
                     ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: Colors.white,
-                  ),
-                )
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          color: Colors.white,
+                        ),
+                      )
                     : Text(
-                  _t(
-                    'changePassword',
-                    'Change Password',
-                  ),
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                        _t(
+                          'changePassword',
+                          'Change Password',
+                        ),
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ),
           ],
@@ -979,9 +962,7 @@ class _ChangePasswordScreenState
         suffixIcon: IconButton(
           onPressed: onToggle,
           icon: Icon(
-            hidden
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
+            hidden ? Icons.visibility_off_outlined : Icons.visibility_outlined,
           ),
         ),
       ),
@@ -1063,10 +1044,10 @@ class _NotificationSettingsScreenState
               value: vaccination,
               onChanged: allNotifications
                   ? (value) {
-                setState(() {
-                  vaccination = value;
-                });
-              }
+                      setState(() {
+                        vaccination = value;
+                      });
+                    }
                   : null,
             ),
             const SizedBox(height: 10),
@@ -1082,10 +1063,10 @@ class _NotificationSettingsScreenState
               value: health,
               onChanged: allNotifications
                   ? (value) {
-                setState(() {
-                  health = value;
-                });
-              }
+                      setState(() {
+                        health = value;
+                      });
+                    }
                   : null,
             ),
             const SizedBox(height: 10),
@@ -1101,10 +1082,10 @@ class _NotificationSettingsScreenState
               value: growth,
               onChanged: allNotifications
                   ? (value) {
-                setState(() {
-                  growth = value;
-                });
-              }
+                      setState(() {
+                        growth = value;
+                      });
+                    }
                   : null,
             ),
             const SizedBox(height: 10),
@@ -1120,10 +1101,10 @@ class _NotificationSettingsScreenState
               value: nutrition,
               onChanged: allNotifications
                   ? (value) {
-                setState(() {
-                  nutrition = value;
-                });
-              }
+                      setState(() {
+                        nutrition = value;
+                      });
+                    }
                   : null,
             ),
           ],
@@ -1164,8 +1145,7 @@ class _NotificationSettingsScreenState
           const SizedBox(width: 13),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -1204,12 +1184,10 @@ class HelpSupportScreen extends StatefulWidget {
   const HelpSupportScreen({super.key});
 
   @override
-  State<HelpSupportScreen> createState() =>
-      _HelpSupportScreenState();
+  State<HelpSupportScreen> createState() => _HelpSupportScreenState();
 }
 
-class _HelpSupportScreenState
-    extends State<HelpSupportScreen> {
+class _HelpSupportScreenState extends State<HelpSupportScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final messageController = TextEditingController();
@@ -1234,22 +1212,14 @@ class _HelpSupportScreenState
 
   String _issueText(String issue) {
     final map = <String, String>{
-      'Technical Issue':
-      _t('technicalIssue', 'Technical Issue'),
-      'Account Problem':
-      _t('accountProblem', 'Account Problem'),
-      'Children Records':
-      _t('childrenRecords', 'Children Records'),
-      'Growth Report':
-      _t('growthReport', 'Growth Report'),
-      'Nutrition':
-      _t('nutrition', 'Nutrition'),
-      'Vaccination':
-      _t('vaccination', 'Vaccination'),
-      'Health':
-      _t('health', 'Health'),
-      'Other':
-      _t('other', 'Other'),
+      'Technical Issue': _t('technicalIssue', 'Technical Issue'),
+      'Account Problem': _t('accountProblem', 'Account Problem'),
+      'Children Records': _t('childrenRecords', 'Children Records'),
+      'Growth Report': _t('growthReport', 'Growth Report'),
+      'Nutrition': _t('nutrition', 'Nutrition'),
+      'Vaccination': _t('vaccination', 'Vaccination'),
+      'Health': _t('health', 'Health'),
+      'Other': _t('other', 'Other'),
     };
 
     return map[issue] ?? issue;
@@ -1325,16 +1295,14 @@ class _HelpSupportScreenState
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment:
-          CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: Colors.grey.shade200,
                 ),
@@ -1400,8 +1368,7 @@ class _HelpSupportScreenState
             const SizedBox(height: 12),
             TextField(
               controller: emailController,
-              keyboardType:
-              TextInputType.emailAddress,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: _t(
                   'emailAddress',
@@ -1490,12 +1457,10 @@ class _HelpSupportScreenState
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFFFFF0F3),
-                borderRadius:
-                BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     _t(

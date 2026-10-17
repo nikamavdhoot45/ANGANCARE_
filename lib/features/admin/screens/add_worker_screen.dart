@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import '../firebase_options.dart';
+import '../../../core/firebase_options.dart';
 
 class AddWorkerScreen extends StatefulWidget {
   const AddWorkerScreen({super.key});
@@ -69,8 +69,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
       // ============================================================
 
       secondaryApp = await Firebase.initializeApp(
-        name:
-        'workerCreation_${DateTime.now().millisecondsSinceEpoch}',
+        name: 'workerCreation_${DateTime.now().millisecondsSinceEpoch}',
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
@@ -83,8 +82,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
       // ============================================================
 
       try {
-        final credential =
-        await workerAuth.createUserWithEmailAndPassword(
+        final credential = await workerAuth.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
@@ -106,7 +104,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
 
         try {
           final existingCredential =
-          await workerAuth.signInWithEmailAndPassword(
+              await workerAuth.signInWithEmailAndPassword(
             email: email,
             password: password,
           );
@@ -118,8 +116,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
               loginError.code == 'invalid-credential') {
             throw FirebaseAuthException(
               code: 'existing-account-password-mismatch',
-              message:
-              'This email already exists in Firebase Authentication, '
+              message: 'This email already exists in Firebase Authentication, '
                   'but the temporary password entered here is incorrect.',
             );
           }
@@ -138,10 +135,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
       // SAVE / REPAIR WORKER FIRESTORE DOCUMENT
       // ============================================================
 
-      await _firestore
-          .collection('workers')
-          .doc(workerUser.uid)
-          .set(
+      await _firestore.collection('workers').doc(workerUser.uid).set(
         {
           'uid': workerUser.uid,
           'name': name,
@@ -183,10 +177,10 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
 
       final String message = createdNewAuthAccount
           ? 'Worker added successfully.\n\n'
-          'The worker can now log in using the email and temporary password.'
+              'The worker can now log in using the email and temporary password.'
           : 'Worker account repaired successfully.\n\n'
-          'The existing Firebase Authentication account is now linked '
-          'to the worker profile in Firestore.';
+              'The existing Firebase Authentication account is now linked '
+              'to the worker profile in Firestore.';
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -233,12 +227,11 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
       switch (e.code) {
         case 'email-already-in-use':
           message =
-          'This email is already registered in Firebase Authentication.';
+              'This email is already registered in Firebase Authentication.';
           break;
 
         case 'existing-account-password-mismatch':
-          message =
-          'This email already exists in Firebase Authentication, '
+          message = 'This email already exists in Firebase Authentication, '
               'but the temporary password entered here is incorrect.\n\n'
               'Enter the existing account password to repair the worker profile.';
           break;
@@ -253,7 +246,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
 
         case 'operation-not-allowed':
           message =
-          'Email and password authentication is not enabled in Firebase.';
+              'Email and password authentication is not enabled in Firebase.';
           break;
 
         case 'network-request-failed':
@@ -262,18 +255,15 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
 
         case 'wrong-password':
         case 'invalid-credential':
-          message =
-          'The existing Firebase account password is incorrect.';
+          message = 'The existing Firebase account password is incorrect.';
           break;
 
         case 'user-disabled':
-          message =
-          'This Firebase Authentication account has been disabled.';
+          message = 'This Firebase Authentication account has been disabled.';
           break;
 
         default:
-          message =
-          'Unable to create worker account.\n\n'
+          message = 'Unable to create worker account.\n\n'
               'Firebase error: ${e.message ?? e.code}';
       }
 
@@ -319,8 +309,8 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
         SnackBar(
           content: Text(
             'Unable to save worker information.\n\n'
-                'Code: ${e.code}\n'
-                'Message: ${e.message ?? 'Unknown Firestore error'}',
+            'Code: ${e.code}\n'
+            'Message: ${e.message ?? 'Unknown Firestore error'}',
           ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 6),
@@ -492,8 +482,7 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
 
                   final email = value.trim();
 
-                  if (!email.contains('@') ||
-                      !email.contains('.')) {
+                  if (!email.contains('@') || !email.contains('.')) {
                     return 'Please enter a valid email';
                   }
 
@@ -518,19 +507,16 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                 ).copyWith(
                   suffixIcon: IconButton(
                     icon: Icon(
-                      obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      obscurePassword ? Icons.visibility_off : Icons.visibility,
                       color: Colors.grey,
                     ),
                     onPressed: isSaving
                         ? null
                         : () {
-                      setState(() {
-                        obscurePassword =
-                        !obscurePassword;
-                      });
-                    },
+                            setState(() {
+                              obscurePassword = !obscurePassword;
+                            });
+                          },
                   ),
                 ),
                 validator: (value) {
@@ -656,21 +642,21 @@ class _AddWorkerScreenState extends State<AddWorkerScreen> {
                   onPressed: isSaving ? null : _addWorker,
                   child: isSaving
                       ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.5,
-                      color: Colors.white,
-                    ),
-                  )
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Text(
-                    'ADD WORKER',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
+                          'ADD WORKER',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
                 ),
               ),
             ],

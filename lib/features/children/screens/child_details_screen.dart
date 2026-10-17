@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 import 'add_child_screen.dart';
 import 'growth_screen.dart';
 import 'nutrition_screen.dart';
@@ -24,14 +24,11 @@ class ChildDetailsScreen extends StatefulWidget {
   });
 
   @override
-  State<ChildDetailsScreen> createState() =>
-      _ChildDetailsScreenState();
+  State<ChildDetailsScreen> createState() => _ChildDetailsScreenState();
 }
 
-class _ChildDetailsScreenState
-    extends State<ChildDetailsScreen> {
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance;
+class _ChildDetailsScreenState extends State<ChildDetailsScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool isLoading = true;
   String? errorMessage;
@@ -96,10 +93,8 @@ class _ChildDetailsScreenState
     }
 
     try {
-      final document = await _firestore
-          .collection('children')
-          .doc(widget.childId)
-          .get();
+      final document =
+          await _firestore.collection('children').doc(widget.childId).get();
 
       if (!document.exists) {
         if (!mounted) {
@@ -133,8 +128,7 @@ class _ChildDetailsScreenState
 
       setState(() {
         isLoading = false;
-        errorMessage =
-        '${_t('unableToLoadChildDetails')}: $e';
+        errorMessage = '${_t('unableToLoadChildDetails')}: $e';
       });
     }
   }
@@ -207,16 +201,13 @@ class _ChildDetailsScreenState
   // =========================
 
   String _value(
-      String key, {
-        String defaultValue = 'Not provided',
-      }) {
+    String key, {
+    String defaultValue = 'Not provided',
+  }) {
     final value = childData?[key];
 
-    if (value == null ||
-        value.toString().trim().isEmpty) {
-      return defaultValue == 'Not provided'
-          ? _t('notProvided')
-          : defaultValue;
+    if (value == null || value.toString().trim().isEmpty) {
+      return defaultValue == 'Not provided' ? _t('notProvided') : defaultValue;
     }
 
     return value.toString();
@@ -264,30 +255,24 @@ class _ChildDetailsScreenState
 
     final data = childData ?? {};
 
-    final String name =
-    (data['name'] ?? widget.childName).toString();
+    final String name = (data['name'] ?? widget.childName).toString();
 
-    final String age =
-    (data['age'] ?? widget.age).toString();
+    final String age = (data['age'] ?? widget.age).toString();
 
-    final String gender =
-    (data['gender'] ?? widget.gender).toString();
+    final String gender = (data['gender'] ?? widget.gender).toString();
 
-    final String growthStatus =
-    (data['growthStatus'] ?? 'Normal').toString();
+    final String growthStatus = (data['growthStatus'] ?? 'Normal').toString();
 
     final String nutritionStatus =
-    (data['nutritionStatus'] ?? 'Normal').toString();
+        (data['nutritionStatus'] ?? 'Normal').toString();
 
     final String healthStatus =
-    (data['healthStatus'] ?? widget.status).toString();
+        (data['healthStatus'] ?? widget.status).toString();
 
-    final Color statusColor =
-    _getStatusColor(healthStatus);
+    final Color statusColor = _getStatusColor(healthStatus);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFBF8),
-
       appBar: AppBar(
         title: Text(
           _t('childDetails'),
@@ -305,15 +290,12 @@ class _ChildDetailsScreenState
           ),
         ],
       ),
-
       body: RefreshIndicator(
         color: const Color(0xFFF45170),
         onRefresh: _loadChild,
         child: SingleChildScrollView(
-          physics:
-          const AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(16),
-
           child: Column(
             children: [
               // =========================
@@ -325,8 +307,7 @@ class _ChildDetailsScreenState
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                  BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(18),
                   border: Border.all(
                     color: Colors.grey.shade200,
                   ),
@@ -335,18 +316,14 @@ class _ChildDetailsScreenState
                   children: [
                     CircleAvatar(
                       radius: 42,
-                      backgroundColor:
-                      const Color(0xFFFFE1E7),
+                      backgroundColor: const Color(0xFFFFE1E7),
                       child: Icon(
                         _getGenderIcon(gender),
                         size: 52,
-                        color:
-                        const Color(0xFFF45170),
+                        color: const Color(0xFFF45170),
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
                     Text(
                       name,
                       textAlign: TextAlign.center,
@@ -356,9 +333,7 @@ class _ChildDetailsScreenState
                         color: Color(0xFF29266F),
                       ),
                     ),
-
                     const SizedBox(height: 5),
-
                     Text(
                       '$age ${_t('years')} • ${_localizedGender(gender)}',
                       style: const TextStyle(
@@ -366,12 +341,9 @@ class _ChildDetailsScreenState
                         fontSize: 14,
                       ),
                     ),
-
                     const SizedBox(height: 12),
-
                     Container(
-                      padding:
-                      const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 14,
                         vertical: 7,
                       ),
@@ -379,8 +351,7 @@ class _ChildDetailsScreenState
                         color: statusColor.withValues(
                           alpha: 0.12,
                         ),
-                        borderRadius:
-                        BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         _localizedStatus(healthStatus),
@@ -390,9 +361,7 @@ class _ChildDetailsScreenState
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 18),
-
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
@@ -401,8 +370,7 @@ class _ChildDetailsScreenState
                           Icons.edit_outlined,
                         ),
                         label: Text(
-                          _t('editChildDetails')
-                              .toUpperCase(),
+                          _t('editChildDetails').toUpperCase(),
                         ),
                       ),
                     ),
@@ -606,8 +574,7 @@ class _ChildDetailsScreenState
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius:
-                  BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                     color: Colors.grey.shade200,
                   ),
@@ -615,8 +582,7 @@ class _ChildDetailsScreenState
                 child: Text(
                   _value(
                     'medicalNotes',
-                    defaultValue:
-                    _t('noMedicalNotesAvailable'),
+                    defaultValue: _t('noMedicalNotesAvailable'),
                   ),
                   style: const TextStyle(
                     fontSize: 14,
@@ -642,8 +608,7 @@ class _ChildDetailsScreenState
                 context,
                 icon: Icons.show_chart,
                 title: _t('growthMonitoring'),
-                subtitle:
-                _t('viewHeightWeightGrowth'),
+                subtitle: _t('viewHeightWeightGrowth'),
                 page: GrowthScreen(
                   childId: widget.childId,
                   childName: name,
@@ -656,8 +621,7 @@ class _ChildDetailsScreenState
                 context,
                 icon: Icons.restaurant_outlined,
                 title: _t('nutrition'),
-                subtitle:
-                _t('nutritionAndDietInformation'),
+                subtitle: _t('nutritionAndDietInformation'),
                 page: NutritionScreen(
                   childName: name,
                 ),
@@ -667,11 +631,9 @@ class _ChildDetailsScreenState
 
               _buildMenuCard(
                 context,
-                icon:
-                Icons.medical_services_outlined,
+                icon: Icons.medical_services_outlined,
                 title: _t('healthAndVaccination'),
-                subtitle:
-                _t('healthRecordsAndVaccinations'),
+                subtitle: _t('healthRecordsAndVaccinations'),
                 page: HealthScreen(
                   childId: widget.childId,
                   childName: name,
@@ -732,16 +694,15 @@ class _ChildDetailsScreenState
   // =========================
 
   Widget _buildInfoRow(
-      String title,
-      String value,
-      ) {
+    String title,
+    String value,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 9,
       ),
       child: Row(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             flex: 4,
@@ -776,9 +737,9 @@ class _ChildDetailsScreenState
   // =========================
 
   String _formatMeasurement(
-      dynamic value,
-      String unit,
-      ) {
+    dynamic value,
+    String unit,
+  ) {
     if (value == null) {
       return _t('notRecorded');
     }
@@ -792,9 +753,7 @@ class _ChildDetailsScreenState
     }
 
     final formatted =
-    number % 1 == 0
-        ? number.toInt().toString()
-        : number.toStringAsFixed(2);
+        number % 1 == 0 ? number.toInt().toString() : number.toStringAsFixed(2);
 
     if (unit.isEmpty) {
       return formatted;
@@ -808,12 +767,12 @@ class _ChildDetailsScreenState
   // =========================
 
   Widget _buildMenuCard(
-      BuildContext context, {
-        required IconData icon,
-        required String title,
-        required String subtitle,
-        required Widget page,
-      }) {
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Widget page,
+  }) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -839,8 +798,7 @@ class _ChildDetailsScreenState
               height: 48,
               decoration: BoxDecoration(
                 color: const Color(0xFFFFE1E7),
-                borderRadius:
-                BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 icon,
@@ -848,13 +806,10 @@ class _ChildDetailsScreenState
                 size: 25,
               ),
             ),
-
             const SizedBox(width: 14),
-
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
@@ -864,9 +819,7 @@ class _ChildDetailsScreenState
                       color: Color(0xFF29266F),
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   Text(
                     subtitle,
                     style: const TextStyle(
@@ -877,7 +830,6 @@ class _ChildDetailsScreenState
                 ],
               ),
             ),
-
             const Icon(
               Icons.arrow_forward_ios,
               size: 15,
@@ -898,17 +850,14 @@ class _ChildDetailsScreenState
       child: Padding(
         padding: const EdgeInsets.all(25),
         child: Column(
-          mainAxisAlignment:
-          MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
               Icons.error_outline,
               color: Colors.red,
               size: 60,
             ),
-
             const SizedBox(height: 15),
-
             Text(
               _t('unableToLoadChild'),
               style: const TextStyle(
@@ -917,21 +866,16 @@ class _ChildDetailsScreenState
                 color: Color(0xFF29266F),
               ),
             ),
-
             const SizedBox(height: 10),
-
             Text(
-              errorMessage ??
-                  _t('unknownDatabaseError'),
+              errorMessage ?? _t('unknownDatabaseError'),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 12,
               ),
             ),
-
             const SizedBox(height: 20),
-
             ElevatedButton.icon(
               onPressed: _loadChild,
               icon: const Icon(

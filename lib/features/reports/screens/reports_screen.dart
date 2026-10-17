@@ -146,13 +146,13 @@ class ReportsScreen extends StatelessWidget {
   }
 
   Widget _reportCard(
-      BuildContext context, {
-        required IconData icon,
-        required String title,
-        required String subtitle,
-        required Color iconColor,
-        required Widget page,
-      }) {
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color iconColor,
+    required Widget page,
+  }) {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
@@ -301,8 +301,7 @@ Color _statusColor(String status) {
   return const Color(0xFF4CAF50);
 }
 
-Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-_getChildren() async {
+Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> _getChildren() async {
   final snapshot = await _firestore.collection('children').get();
 
   final children = snapshot.docs.toList();
@@ -322,15 +321,13 @@ _getChildren() async {
 }
 
 Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-_getRecordsForAllChildren(String collectionName) async {
+    _getRecordsForAllChildren(String collectionName) async {
   final children = await _getChildren();
 
   final List<QueryDocumentSnapshot<Map<String, dynamic>>> records = [];
 
   for (final child in children) {
-    final snapshot = await child.reference
-        .collection(collectionName)
-        .get();
+    final snapshot = await child.reference.collection(collectionName).get();
 
     records.addAll(snapshot.docs);
   }
@@ -426,8 +423,7 @@ class ChildrenReportPage extends StatelessWidget {
       title: 'Children Report',
       icon: Icons.people_outline,
       children: [
-        FutureBuilder<
-            List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+        FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
           future: _getChildren(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -511,19 +507,15 @@ class ChildrenReportPage extends StatelessWidget {
                 ...children.map((child) {
                   final data = child.data();
 
-                  final name =
-                  _stringValue(data['name'], 'Unnamed Child');
+                  final name = _stringValue(data['name'], 'Unnamed Child');
 
-                  final age =
-                  _stringValue(data['age'], 'Age not available');
+                  final age = _stringValue(data['age'], 'Age not available');
 
                   final status = _childStatus(data);
 
                   return _childReportRow(
                     name: name,
-                    age: age.contains('Year')
-                        ? age
-                        : '$age Years',
+                    age: age.contains('Year') ? age : '$age Years',
                     status: status,
                     color: _statusColor(status),
                   );
@@ -699,7 +691,7 @@ class GrowthReportPage extends StatelessWidget {
                       )
                     else
                       ...data.map(
-                            (item) => _measurementRow(
+                        (item) => _measurementRow(
                           name: item['name'] as String,
                           height: item['height'] == null
                               ? 'Not recorded'
@@ -734,8 +726,7 @@ class NutritionReportPage extends StatelessWidget {
       title: 'Nutrition Report',
       icon: Icons.restaurant_outlined,
       children: [
-        FutureBuilder<
-            List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+        FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
           future: _getRecordsForAllChildren('nutritionRecords'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -822,16 +813,14 @@ class NutritionReportPage extends StatelessWidget {
                 _informationCard(
                   icon: Icons.local_dining,
                   title: 'Balanced Diet',
-                  value:
-                  'Protein, vegetables, fruits and grains',
+                  value: 'Protein, vegetables, fruits and grains',
                   color: const Color(0xFFFF9800),
                 ),
                 const SizedBox(height: 10),
                 _informationCard(
                   icon: Icons.water_drop_outlined,
                   title: 'Hydration',
-                  value:
-                  'Ensure adequate daily water intake',
+                  value: 'Ensure adequate daily water intake',
                   color: const Color(0xFF2196F3),
                 ),
               ],
@@ -845,9 +834,7 @@ class NutritionReportPage extends StatelessWidget {
 
 String _nutritionStatusValue(Map<String, dynamic> data) {
   final status = _stringValue(
-    data['status'] ??
-        data['nutritionStatus'] ??
-        data['nutrition_status'],
+    data['status'] ?? data['nutritionStatus'] ?? data['nutrition_status'],
   ).toLowerCase();
 
   if (status.contains('risk') ||
@@ -879,8 +866,7 @@ class VaccinationReportPage extends StatelessWidget {
       title: 'Vaccination Report',
       icon: Icons.vaccines_outlined,
       children: [
-        FutureBuilder<
-            List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+        FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
           future: _getRecordsForAllChildren('vaccinationRecords'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -981,9 +967,7 @@ class VaccinationReportPage extends StatelessWidget {
                     );
 
                     final vaccine = _stringValue(
-                      data['vaccine'] ??
-                          data['vaccineName'] ??
-                          data['name'],
+                      data['vaccine'] ?? data['vaccineName'] ?? data['name'],
                       'Vaccination',
                     );
 
@@ -993,8 +977,7 @@ class VaccinationReportPage extends StatelessWidget {
                           data['vaccinationDate'],
                     );
 
-                    final status =
-                    _vaccinationStatus(data);
+                    final status = _vaccinationStatus(data);
 
                     return _vaccinationRow(
                       name: name,
@@ -1047,8 +1030,7 @@ class HealthReportPage extends StatelessWidget {
       title: 'Health Report',
       icon: Icons.medical_services_outlined,
       children: [
-        FutureBuilder<
-            List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
+        FutureBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
           future: _getRecordsForAllChildren('healthRecords'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1145,15 +1127,14 @@ class HealthReportPage extends StatelessWidget {
                       'Child',
                     ),
                     date: _formatDateValue(
-                      data['checkupDate'] ??
-                          data['date'],
+                      data['checkupDate'] ?? data['date'],
                     ),
                     status: status,
                     color: status == 'Healthy'
                         ? const Color(0xFF4CAF50)
                         : status == 'Follow-up'
-                        ? const Color(0xFFFF9800)
-                        : const Color(0xFFF44336),
+                            ? const Color(0xFFFF9800)
+                            : const Color(0xFFF44336),
                   );
                 }),
               ],
@@ -1167,9 +1148,7 @@ class HealthReportPage extends StatelessWidget {
 
 String _healthStatus(Map<String, dynamic> data) {
   final status = _stringValue(
-    data['status'] ??
-        data['healthStatus'] ??
-        data['health_status'],
+    data['status'] ?? data['healthStatus'] ?? data['health_status'],
   ).toLowerCase();
 
   if (status.contains('healthy') ||
@@ -1190,11 +1169,11 @@ String _healthStatus(Map<String, dynamic> data) {
 // ============================================================
 
 Widget _reportScaffold(
-    BuildContext context, {
-      required String title,
-      required IconData icon,
-      required List<Widget> children,
-    }) {
+  BuildContext context, {
+  required String title,
+  required IconData icon,
+  required List<Widget> children,
+}) {
   return Scaffold(
     backgroundColor: const Color(0xFFFFFBF8),
     appBar: AppBar(

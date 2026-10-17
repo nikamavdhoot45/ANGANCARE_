@@ -1,29 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 import 'add_worker_screen.dart';
 
 class AdminWorkersScreen extends StatefulWidget {
   const AdminWorkersScreen({super.key});
 
   @override
-  State<AdminWorkersScreen> createState() =>
-      _AdminWorkersScreenState();
+  State<AdminWorkersScreen> createState() => _AdminWorkersScreenState();
 }
 
 class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       return marathi;
@@ -50,14 +47,11 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
   }
 
   Future<void> _updateWorkerStatus(
-      String workerId,
-      bool currentStatus,
-      ) async {
+    String workerId,
+    bool currentStatus,
+  ) async {
     try {
-      await _firestore
-          .collection('workers')
-          .doc(workerId)
-          .update({
+      await _firestore.collection('workers').doc(workerId).update({
         'isActive': !currentStatus,
       });
 
@@ -68,20 +62,19 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
           content: Text(
             currentStatus
                 ? _t(
-              context,
-              'Worker account deactivated.',
-              'कार्यकर्ता खाते निष्क्रिय केले.',
-              'कार्यकर्ता खाता निष्क्रिय कर दिया गया।',
-            )
+                    context,
+                    'Worker account deactivated.',
+                    'कार्यकर्ता खाते निष्क्रिय केले.',
+                    'कार्यकर्ता खाता निष्क्रिय कर दिया गया।',
+                  )
                 : _t(
-              context,
-              'Worker account activated.',
-              'कार्यकर्ता खाते सक्रिय केले.',
-              'कार्यकर्ता खाता सक्रिय कर दिया गया।',
-            ),
+                    context,
+                    'Worker account activated.',
+                    'कार्यकर्ता खाते सक्रिय केले.',
+                    'कार्यकर्ता खाता सक्रिय कर दिया गया।',
+                  ),
           ),
-          backgroundColor:
-          currentStatus ? Colors.orange : Colors.green,
+          backgroundColor: currentStatus ? Colors.orange : Colors.green,
         ),
       );
     } on FirebaseException catch (e) {
@@ -104,9 +97,9 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
   }
 
   void _showWorkerDetails(
-      BuildContext context,
-      Map<String, dynamic> worker,
-      ) {
+    BuildContext context,
+    Map<String, dynamic> worker,
+  ) {
     final name = worker['name'] ?? 'Unknown';
     final email = worker['email'] ?? 'No email';
     final phone = worker['phone'] ?? 'No phone';
@@ -138,8 +131,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                 children: [
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor:
-                    const Color(0xFFFCE4EC),
+                    backgroundColor: const Color(0xFFFCE4EC),
                     child: const Icon(
                       Icons.person,
                       color: Color(0xFFF45170),
@@ -203,17 +195,17 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                 ),
                 isActive
                     ? _t(
-                  context,
-                  'Active',
-                  'सक्रिय',
-                  'सक्रिय',
-                )
+                        context,
+                        'Active',
+                        'सक्रिय',
+                        'सक्रिय',
+                      )
                     : _t(
-                  context,
-                  'Inactive',
-                  'निष्क्रिय',
-                  'निष्क्रिय',
-                ),
+                        context,
+                        'Inactive',
+                        'निष्क्रिय',
+                        'निष्क्रिय',
+                      ),
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -236,21 +228,20 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                   label: Text(
                     isActive
                         ? _t(
-                      context,
-                      'DEACTIVATE WORKER',
-                      'कार्यकर्ता निष्क्रिय करा',
-                      'कार्यकर्ता निष्क्रिय करें',
-                    )
+                            context,
+                            'DEACTIVATE WORKER',
+                            'कार्यकर्ता निष्क्रिय करा',
+                            'कार्यकर्ता निष्क्रिय करें',
+                          )
                         : _t(
-                      context,
-                      'ACTIVATE WORKER',
-                      'कार्यकर्ता सक्रिय करा',
-                      'कार्यकर्ता सक्रिय करें',
-                    ),
+                            context,
+                            'ACTIVATE WORKER',
+                            'कार्यकर्ता सक्रिय करा',
+                            'कार्यकर्ता सक्रिय करें',
+                          ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                    isActive ? Colors.orange : Colors.green,
+                    backgroundColor: isActive ? Colors.orange : Colors.green,
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -263,10 +254,10 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
   }
 
   Widget _detailRow(
-      IconData icon,
-      String title,
-      String value,
-      ) {
+    IconData icon,
+    String title,
+    String value,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -303,9 +294,9 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
   }
 
   Widget _buildWorkerCard(
-      BuildContext context,
-      Map<String, dynamic> worker,
-      ) {
+    BuildContext context,
+    Map<String, dynamic> worker,
+  ) {
     final name = worker['name'] ?? 'Unknown Worker';
     final email = worker['email'] ?? 'No email';
     final centerId = worker['centerId'] ?? 'No center';
@@ -332,8 +323,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundColor:
-              const Color(0xFFFCE4EC),
+              backgroundColor: const Color(0xFFFCE4EC),
               child: const Icon(
                 Icons.person_outline,
                 color: Color(0xFFF45170),
@@ -343,8 +333,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
             const SizedBox(width: 13),
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     name.toString(),
@@ -403,29 +392,26 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                     color: isActive
                         ? const Color(0xFFE8F5E9)
                         : const Color(0xFFFFF3E0),
-                    borderRadius:
-                    BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     isActive
                         ? _t(
-                      context,
-                      'Active',
-                      'सक्रिय',
-                      'सक्रिय',
-                    )
+                            context,
+                            'Active',
+                            'सक्रिय',
+                            'सक्रिय',
+                          )
                         : _t(
-                      context,
-                      'Inactive',
-                      'निष्क्रिय',
-                      'निष्क्रिय',
-                    ),
+                            context,
+                            'Inactive',
+                            'निष्क्रिय',
+                            'निष्क्रिय',
+                          ),
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: isActive
-                          ? Colors.green
-                          : Colors.orange,
+                      color: isActive ? Colors.green : Colors.orange,
                     ),
                   ),
                 ),
@@ -445,8 +431,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations =
-    AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFBF8),
@@ -461,8 +446,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
           ),
         ),
       ),
-      floatingActionButton:
-      FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: _openAddWorker,
         backgroundColor: const Color(0xFFF45170),
         foregroundColor: Colors.white,
@@ -476,14 +460,13 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
           ),
         ),
       ),
-      body: StreamBuilder<
-          QuerySnapshot<Map<String, dynamic>>>(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: _firestore
             .collection('workers')
             .orderBy(
-          'createdAt',
-          descending: true,
-        )
+              'createdAt',
+              descending: true,
+            )
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -507,8 +490,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
             );
           }
 
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
                 color: Color(0xFFF45170),
@@ -516,25 +498,21 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
             );
           }
 
-          final documents =
-              snapshot.data?.docs ?? [];
+          final documents = snapshot.data?.docs ?? [];
 
           if (documents.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(30),
                 child: Column(
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: 80,
                       height: 80,
                       decoration: BoxDecoration(
-                        color:
-                        const Color(0xFFFCE4EC),
-                        borderRadius:
-                        BorderRadius.circular(22),
+                        color: const Color(0xFFFCE4EC),
+                        borderRadius: BorderRadius.circular(22),
                       ),
                       child: const Icon(
                         Icons.people_outline,
@@ -615,8 +593,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                   children: [
                     Expanded(
                       child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             _t(
@@ -648,16 +625,13 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                       ),
                     ),
                     Container(
-                      padding:
-                      const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color:
-                        const Color(0xFFFCE4EC),
-                        borderRadius:
-                        BorderRadius.circular(20),
+                        color: const Color(0xFFFCE4EC),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         '${workers.length} ${workers.length == 1 ? _t(context, 'Worker', 'कार्यकर्ता', 'कार्यकर्ता') : _t(context, 'Workers', 'कार्यकर्ते', 'कार्यकर्ता')}',
@@ -672,7 +646,7 @@ class _AdminWorkersScreenState extends State<AdminWorkersScreen> {
                 ),
                 const SizedBox(height: 20),
                 ...workers.map(
-                      (worker) => _buildWorkerCard(
+                  (worker) => _buildWorkerCard(
                     context,
                     worker,
                   ),

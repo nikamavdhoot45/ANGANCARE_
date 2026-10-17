@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class GrowthScreen extends StatefulWidget {
   final String childId;
@@ -23,13 +23,12 @@ class _GrowthScreenState extends State<GrowthScreen> {
   late Future<Map<String, dynamic>> _screenDataFuture;
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') return marathi;
     if (languageCode == 'hi') return hindi;
@@ -50,7 +49,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
       _childDataFuture,
       _growthRecordsFuture,
     ]).then(
-          (values) => {
+      (values) => {
         'childData': values[0],
         'records': values[1],
       },
@@ -104,8 +103,8 @@ class _GrowthScreenState extends State<GrowthScreen> {
     }
 
     return DateTime.tryParse(
-      value?.toString() ?? '',
-    ) ??
+          value?.toString() ?? '',
+        ) ??
         DateTime.fromMillisecondsSinceEpoch(0);
   }
 
@@ -129,8 +128,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
       );
     }
 
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       const months = [
@@ -189,9 +187,9 @@ class _GrowthScreenState extends State<GrowthScreen> {
   }
 
   Map<String, double> _getExpectedRange(
-      double age,
-      String type,
-      ) {
+    double age,
+    String type,
+  ) {
     if (type == 'weight') {
       if (age < 0.5) {
         return {'min': 2.5, 'max': 8.5};
@@ -242,8 +240,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
       ).firstMatch(ageText);
 
       if (numberMatch != null) {
-        final value =
-        double.tryParse(numberMatch.group(1)!);
+        final value = double.tryParse(numberMatch.group(1)!);
 
         if (value != null) {
           if (ageText.contains('month')) {
@@ -259,10 +256,10 @@ class _GrowthScreenState extends State<GrowthScreen> {
   }
 
   String _getGrowthAssessment(
-      double value,
-      double min,
-      double max,
-      ) {
+    double value,
+    double min,
+    double max,
+  ) {
     if (value < min) {
       return _t(
         context,
@@ -290,10 +287,10 @@ class _GrowthScreenState extends State<GrowthScreen> {
   }
 
   Color _getAssessmentColor(
-      double value,
-      double min,
-      double max,
-      ) {
+    double value,
+    double min,
+    double max,
+  ) {
     if (value < min || value > max) {
       return const Color(0xFFFF9800);
     }
@@ -337,8 +334,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -420,8 +416,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                   children: [
                     TextField(
                       controller: heightController,
-                      keyboardType:
-                      const TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
                       decoration: InputDecoration(
@@ -443,8 +438,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                     const SizedBox(height: 14),
                     TextField(
                       controller: weightController,
-                      keyboardType:
-                      const TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
                       decoration: InputDecoration(
@@ -475,8 +469,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                           lastDate: DateTime.now(),
                         );
 
-                        if (pickedDate != null &&
-                            dialogContext.mounted) {
+                        if (pickedDate != null && dialogContext.mounted) {
                           setDialogState(() {
                             selectedDate = pickedDate;
                           });
@@ -507,11 +500,11 @@ class _GrowthScreenState extends State<GrowthScreen> {
                   onPressed: isSaving
                       ? null
                       : () {
-                    Navigator.pop(
-                      dialogContext,
-                      false,
-                    );
-                  },
+                          Navigator.pop(
+                            dialogContext,
+                            false,
+                          );
+                        },
                   child: Text(
                     _t(
                       context,
@@ -525,123 +518,116 @@ class _GrowthScreenState extends State<GrowthScreen> {
                   onPressed: isSaving
                       ? null
                       : () async {
-                    if (isSaving) return;
+                          if (isSaving) return;
 
-                    setDialogState(() {
-                      isSaving = true;
-                    });
+                          setDialogState(() {
+                            isSaving = true;
+                          });
 
-                    final heightText =
-                    heightController.text.trim();
+                          final heightText = heightController.text.trim();
 
-                    final weightText =
-                    weightController.text.trim();
+                          final weightText = weightController.text.trim();
 
-                    if (heightText.isEmpty ||
-                        weightText.isEmpty) {
-                      setDialogState(() {
-                        isSaving = false;
-                      });
+                          if (heightText.isEmpty || weightText.isEmpty) {
+                            setDialogState(() {
+                              isSaving = false;
+                            });
 
-                      if (!context.mounted) return;
+                            if (!context.mounted) return;
 
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            _t(
+                            ScaffoldMessenger.of(
                               context,
-                              'Please enter height and weight.',
-                              'कृपया उंची आणि वजन भरा.',
-                              'कृपया ऊंचाई और वज़न भरें।',
-                            ),
-                          ),
-                        ),
-                      );
+                            ).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  _t(
+                                    context,
+                                    'Please enter height and weight.',
+                                    'कृपया उंची आणि वजन भरा.',
+                                    'कृपया ऊंचाई और वज़न भरें।',
+                                  ),
+                                ),
+                              ),
+                            );
 
-                      return;
-                    }
+                            return;
+                          }
 
-                    final height =
-                    double.tryParse(heightText);
+                          final height = double.tryParse(heightText);
 
-                    final weight =
-                    double.tryParse(weightText);
+                          final weight = double.tryParse(weightText);
 
-                    if (height == null || weight == null) {
-                      setDialogState(() {
-                        isSaving = false;
-                      });
+                          if (height == null || weight == null) {
+                            setDialogState(() {
+                              isSaving = false;
+                            });
 
-                      if (!context.mounted) return;
+                            if (!context.mounted) return;
 
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            _t(
+                            ScaffoldMessenger.of(
                               context,
-                              'Please enter valid numbers.',
-                              'कृपया योग्य संख्या भरा.',
-                              'कृपया सही संख्या भरें।',
-                            ),
-                          ),
-                        ),
-                      );
+                            ).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  _t(
+                                    context,
+                                    'Please enter valid numbers.',
+                                    'कृपया योग्य संख्या भरा.',
+                                    'कृपया सही संख्या भरें।',
+                                  ),
+                                ),
+                              ),
+                            );
 
-                      return;
-                    }
+                            return;
+                          }
 
-                    try {
-                      await FirebaseFirestore.instance
-                          .collection('children')
-                          .doc(widget.childId)
-                          .collection('growthRecords')
-                          .add({
-                        'height': height,
-                        'weight': weight,
-                        'date':
-                        Timestamp.fromDate(selectedDate),
-                        'createdAt':
-                        Timestamp.fromDate(DateTime.now()),
-                      });
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('children')
+                                .doc(widget.childId)
+                                .collection('growthRecords')
+                                .add({
+                              'height': height,
+                              'weight': weight,
+                              'date': Timestamp.fromDate(selectedDate),
+                              'createdAt': Timestamp.fromDate(DateTime.now()),
+                            });
 
-                      if (!dialogContext.mounted) {
-                        return;
-                      }
+                            if (!dialogContext.mounted) {
+                              return;
+                            }
 
-                      Navigator.pop(
-                        dialogContext,
-                        true,
-                      );
-                    } catch (e) {
-                      setDialogState(() {
-                        isSaving = false;
-                      });
+                            Navigator.pop(
+                              dialogContext,
+                              true,
+                            );
+                          } catch (e) {
+                            setDialogState(() {
+                              isSaving = false;
+                            });
 
-                      if (!dialogContext.mounted) {
-                        return;
-                      }
+                            if (!dialogContext.mounted) {
+                              return;
+                            }
 
-                      ScaffoldMessenger.of(
-                        dialogContext,
-                      ).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            '${_t(
-                              context,
-                              'Unable to save growth record',
-                              'वाढीची नोंद जतन करता आली नाही',
-                              'विकास रिकॉर्ड सहेजने में असमर्थ',
-                            )}: $e',
-                          ),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
+                            ScaffoldMessenger.of(
+                              dialogContext,
+                            ).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${_t(
+                                    context,
+                                    'Unable to save growth record',
+                                    'वाढीची नोंद जतन करता आली नाही',
+                                    'विकास रिकॉर्ड सहेजने में असमर्थ',
+                                  )}: $e',
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                   child: Text(
                     _t(
                       context,
@@ -734,8 +720,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
       body: FutureBuilder<Map<String, dynamic>>(
         future: _screenDataFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(
                 color: Color(0xFFF45170),
@@ -763,18 +748,13 @@ class _GrowthScreenState extends State<GrowthScreen> {
             );
           }
 
-          final data =
-              snapshot.data ?? <String, dynamic>{};
+          final data = snapshot.data ?? <String, dynamic>{};
 
-          final childData =
-              (data['childData']
-              as Map<String, dynamic>?) ??
-                  <String, dynamic>{};
+          final childData = (data['childData'] as Map<String, dynamic>?) ??
+              <String, dynamic>{};
 
-          final records =
-              (data['records']
-              as List<Map<String, dynamic>>?) ??
-                  <Map<String, dynamic>>[];
+          final records = (data['records'] as List<Map<String, dynamic>>?) ??
+              <Map<String, dynamic>>[];
 
           Map<String, dynamic>? latestRecord;
 
@@ -783,171 +763,137 @@ class _GrowthScreenState extends State<GrowthScreen> {
           }
 
           final String height =
-          (latestRecord?['height'] ??
-              childData['height'] ??
-              '0')
-              .toString();
+              (latestRecord?['height'] ?? childData['height'] ?? '0')
+                  .toString();
 
           final String weight =
-          (latestRecord?['weight'] ??
-              childData['weight'] ??
-              '0')
-              .toString();
+              (latestRecord?['weight'] ?? childData['weight'] ?? '0')
+                  .toString();
 
-          final String growthStatus =
-          (childData['growthStatus'] ??
-              childData['growth_status'] ??
-              'Normal')
+          final String growthStatus = (childData['growthStatus'] ??
+                  childData['growth_status'] ??
+                  'Normal')
               .toString();
 
           double growthProgress = 0.72;
 
           final progressValue =
-              childData['growthProgress'] ??
-                  latestRecord?['growthProgress'];
+              childData['growthProgress'] ?? latestRecord?['growthProgress'];
 
           if (progressValue is num) {
-            growthProgress =
-                progressValue.toDouble();
+            growthProgress = progressValue.toDouble();
 
             if (growthProgress > 1) {
-              growthProgress =
-                  growthProgress / 100;
+              growthProgress = growthProgress / 100;
             }
 
-            growthProgress =
-                growthProgress
-                    .clamp(0.0, 1.0)
-                    .toDouble();
+            growthProgress = growthProgress.clamp(0.0, 1.0).toDouble();
           }
 
           Color statusColor;
 
-          if (growthStatus.toLowerCase() ==
-              'normal') {
-            statusColor =
-            const Color(0xFF4CAF50);
-          } else if (growthStatus
-              .toLowerCase() ==
-              'moderate') {
-            statusColor =
-            const Color(0xFFFF9800);
+          if (growthStatus.toLowerCase() == 'normal') {
+            statusColor = const Color(0xFF4CAF50);
+          } else if (growthStatus.toLowerCase() == 'moderate') {
+            statusColor = const Color(0xFFFF9800);
           } else {
-            statusColor =
-            const Color(0xFFF44336);
+            statusColor = const Color(0xFFF44336);
           }
 
-          final localizedGrowthStatus =
-          growthStatus.toLowerCase() ==
-              'normal'
+          final localizedGrowthStatus = growthStatus.toLowerCase() == 'normal'
               ? _t(
-            context,
-            'Normal',
-            'सामान्य',
-            'सामान्य',
-          )
-              : growthStatus.toLowerCase() ==
-              'moderate'
-              ? _t(
-            context,
-            'Moderate',
-            'मध्यम',
-            'मध्यम',
-          )
-              : _t(
-            context,
-            'Severe',
-            'गंभीर',
-            'गंभीर',
-          );
+                  context,
+                  'Normal',
+                  'सामान्य',
+                  'सामान्य',
+                )
+              : growthStatus.toLowerCase() == 'moderate'
+                  ? _t(
+                      context,
+                      'Moderate',
+                      'मध्यम',
+                      'मध्यम',
+                    )
+                  : _t(
+                      context,
+                      'Severe',
+                      'गंभीर',
+                      'गंभीर',
+                    );
 
-          final childAge =
-          _getChildAge(childData);
+          final childAge = _getChildAge(childData);
 
-          final heightValue =
-          double.tryParse(
+          final heightValue = double.tryParse(
             height.replaceAll(
               RegExp(r'[^0-9.]'),
               '',
             ),
           );
 
-          final weightValue =
-          double.tryParse(
+          final weightValue = double.tryParse(
             weight.replaceAll(
               RegExp(r'[^0-9.]'),
               '',
             ),
           );
 
-          final heightRange =
-          _getExpectedRange(
+          final heightRange = _getExpectedRange(
             childAge,
             'height',
           );
 
-          final weightRange =
-          _getExpectedRange(
+          final weightRange = _getExpectedRange(
             childAge,
             'weight',
           );
 
-          final heightAssessment =
-          heightValue == null ||
-              heightValue == 0
+          final heightAssessment = heightValue == null || heightValue == 0
               ? _t(
-            context,
-            'No height data',
-            'उंचीची माहिती नाही',
-            'ऊंचाई की जानकारी नहीं',
-          )
+                  context,
+                  'No height data',
+                  'उंचीची माहिती नाही',
+                  'ऊंचाई की जानकारी नहीं',
+                )
               : _getGrowthAssessment(
-            heightValue,
-            heightRange['min']!,
-            heightRange['max']!,
-          );
+                  heightValue,
+                  heightRange['min']!,
+                  heightRange['max']!,
+                );
 
-          final weightAssessment =
-          weightValue == null ||
-              weightValue == 0
+          final weightAssessment = weightValue == null || weightValue == 0
               ? _t(
-            context,
-            'No weight data',
-            'वजनाची माहिती नाही',
-            'वज़न की जानकारी नहीं',
-          )
+                  context,
+                  'No weight data',
+                  'वजनाची माहिती नाही',
+                  'वज़न की जानकारी नहीं',
+                )
               : _getGrowthAssessment(
-            weightValue,
-            weightRange['min']!,
-            weightRange['max']!,
-          );
+                  weightValue,
+                  weightRange['min']!,
+                  weightRange['max']!,
+                );
 
-          final heightColor =
-          heightValue == null ||
-              heightValue == 0
+          final heightColor = heightValue == null || heightValue == 0
               ? Colors.grey
               : _getAssessmentColor(
-            heightValue,
-            heightRange['min']!,
-            heightRange['max']!,
-          );
+                  heightValue,
+                  heightRange['min']!,
+                  heightRange['max']!,
+                );
 
-          final weightColor =
-          weightValue == null ||
-              weightValue == 0
+          final weightColor = weightValue == null || weightValue == 0
               ? Colors.grey
               : _getAssessmentColor(
-            weightValue,
-            weightRange['min']!,
-            weightRange['max']!,
-          );
+                  weightValue,
+                  weightRange['min']!,
+                  weightRange['max']!,
+                );
 
           return RefreshIndicator(
             color: const Color(0xFFF45170),
             onRefresh: _refreshData,
             child: SingleChildScrollView(
-              physics:
-              const AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(
                 16,
                 16,
@@ -955,16 +901,14 @@ class _GrowthScreenState extends State<GrowthScreen> {
                 100,
               ),
               child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                      BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(15),
                       border: Border.all(
                         color: Colors.grey.shade200,
                       ),
@@ -973,27 +917,23 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 25,
-                          backgroundColor:
-                          Color(0xFFFFE1E7),
+                          backgroundColor: Color(0xFFFFE1E7),
                           child: Icon(
                             Icons.child_care,
-                            color:
-                            Color(0xFFF45170),
+                            color: Color(0xFFF45170),
                             size: 30,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 widget.childName,
                                 style: const TextStyle(
                                   fontSize: 18,
-                                  fontWeight:
-                                  FontWeight.bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -1015,9 +955,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   Text(
                     _t(
                       context,
@@ -1030,14 +968,11 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
                   Row(
                     children: [
                       Expanded(
-                        child:
-                        _buildMeasurementCard(
+                        child: _buildMeasurementCard(
                           icon: Icons.height,
                           title: _t(
                             context,
@@ -1045,33 +980,25 @@ class _GrowthScreenState extends State<GrowthScreen> {
                             'उंची',
                             'ऊंचाई',
                           ),
-                          value: height == '0'
-                              ? '-'
-                              : '$height cm',
+                          value: height == '0' ? '-' : '$height cm',
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child:
-                        _buildMeasurementCard(
-                          icon: Icons
-                              .monitor_weight_outlined,
+                        child: _buildMeasurementCard(
+                          icon: Icons.monitor_weight_outlined,
                           title: _t(
                             context,
                             'Weight',
                             'वजन',
                             'वज़न',
                           ),
-                          value: weight == '0'
-                              ? '-'
-                              : '$weight kg',
+                          value: weight == '0' ? '-' : '$weight kg',
                         ),
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
                   Text(
                     _t(
                       context,
@@ -1084,9 +1011,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
                   _buildGrowthAssessmentCard(
                     title: _t(
                       context,
@@ -1094,17 +1019,13 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       'उंची',
                       'ऊंचाई',
                     ),
-                    value: height == '0'
-                        ? '-'
-                        : '$height cm',
+                    value: height == '0' ? '-' : '$height cm',
                     expected:
-                    '${heightRange['min']!.toStringAsFixed(0)} - ${heightRange['max']!.toStringAsFixed(0)} cm',
-                    assessment:
-                    heightAssessment,
+                        '${heightRange['min']!.toStringAsFixed(0)} - ${heightRange['max']!.toStringAsFixed(0)} cm',
+                    assessment: heightAssessment,
                     color: heightColor,
                     icon: Icons.height,
                   ),
-
                   _buildGrowthAssessmentCard(
                     title: _t(
                       context,
@@ -1112,22 +1033,16 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       'वजन',
                       'वज़न',
                     ),
-                    value: weight == '0'
-                        ? '-'
-                        : '$weight kg',
+                    value: weight == '0' ? '-' : '$weight kg',
                     expected:
-                    '${weightRange['min']!.toStringAsFixed(1)} - ${weightRange['max']!.toStringAsFixed(1)} kg',
-                    assessment:
-                    weightAssessment,
+                        '${weightRange['min']!.toStringAsFixed(1)} - ${weightRange['max']!.toStringAsFixed(1)} kg',
+                    assessment: weightAssessment,
                     color: weightColor,
-                    icon: Icons
-                        .monitor_weight_outlined,
+                    icon: Icons.monitor_weight_outlined,
                   ),
-
                   if (childAge > 0)
                     Align(
-                      alignment:
-                      Alignment.centerLeft,
+                      alignment: Alignment.centerLeft,
                       child: Text(
                         '${_t(
                           context,
@@ -1146,9 +1061,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                         ),
                       ),
                     ),
-
                   const SizedBox(height: 20),
-
                   Text(
                     _t(
                       context,
@@ -1161,46 +1074,36 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
                   Container(
                     width: double.infinity,
-                    padding:
-                    const EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius:
-                      BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(15),
                       border: Border.all(
                         color: Colors.grey.shade200,
                       ),
                     ),
                     child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Container(
                               width: 45,
                               height: 45,
-                              decoration:
-                              BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: const Color(
                                   0xFFE8F5E9,
                                 ),
-                                borderRadius:
-                                BorderRadius.circular(
+                                borderRadius: BorderRadius.circular(
                                   12,
                                 ),
                               ),
                               child: Icon(
-                                growthStatus
-                                    .toLowerCase() ==
-                                    'normal'
-                                    ? Icons
-                                    .check_circle_outline
+                                growthStatus.toLowerCase() == 'normal'
+                                    ? Icons.check_circle_outline
                                     : Icons.info_outline,
                                 color: statusColor,
                               ),
@@ -1208,9 +1111,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment
-                                    .start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     '$localizedGrowthStatus ${_t(
@@ -1219,34 +1120,29 @@ class _GrowthScreenState extends State<GrowthScreen> {
                                       'वाढ',
                                       'विकास',
                                     )}',
-                                    style:
-                                    const TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 16,
-                                      fontWeight:
-                                      FontWeight.bold,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                   const SizedBox(
                                     height: 3,
                                   ),
                                   Text(
-                                    growthStatus
-                                        .toLowerCase() ==
-                                        'normal'
+                                    growthStatus.toLowerCase() == 'normal'
                                         ? _t(
-                                      context,
-                                      'Growth is within normal range',
-                                      'वाढ सामान्य श्रेणीत आहे',
-                                      'विकास सामान्य सीमा में है',
-                                    )
+                                            context,
+                                            'Growth is within normal range',
+                                            'वाढ सामान्य श्रेणीत आहे',
+                                            'विकास सामान्य सीमा में है',
+                                          )
                                         : _t(
-                                      context,
-                                      'Growth needs attention',
-                                      'वाढीकडे लक्ष देणे आवश्यक आहे',
-                                      'विकास पर ध्यान देने की आवश्यकता है',
-                                    ),
-                                    style:
-                                    const TextStyle(
+                                            context,
+                                            'Growth needs attention',
+                                            'वाढीकडे लक्ष देणे आवश्यक आहे',
+                                            'विकास पर ध्यान देने की आवश्यकता है',
+                                          ),
+                                    style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,
                                     ),
@@ -1256,9 +1152,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 20),
-
                         Text(
                           _t(
                             context,
@@ -1267,32 +1161,22 @@ class _GrowthScreenState extends State<GrowthScreen> {
                             'विकास की प्रगति',
                           ),
                           style: const TextStyle(
-                            fontWeight:
-                            FontWeight.w600,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-
                         const SizedBox(height: 10),
-
                         ClipRRect(
-                          borderRadius:
-                          BorderRadius.circular(10),
-                          child:
-                          LinearProgressIndicator(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
                             value: growthProgress,
                             minHeight: 10,
-                            backgroundColor:
-                            Colors.grey.shade200,
+                            backgroundColor: Colors.grey.shade200,
                             color: statusColor,
                           ),
                         ),
-
                         const SizedBox(height: 8),
-
                         Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment
-                              .spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               _t(
@@ -1301,8 +1185,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                                 'कमी',
                                 'कम',
                               ),
-                              style:
-                              const TextStyle(
+                              style: const TextStyle(
                                 fontSize: 11,
                                 color: Colors.grey,
                               ),
@@ -1314,13 +1197,10 @@ class _GrowthScreenState extends State<GrowthScreen> {
                                 'सामान्य',
                                 'सामान्य',
                               ),
-                              style:
-                              const TextStyle(
+                              style: const TextStyle(
                                 fontSize: 11,
-                                color:
-                                Color(0xFF4CAF50),
-                                fontWeight:
-                                FontWeight.bold,
+                                color: Color(0xFF4CAF50),
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
@@ -1330,8 +1210,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
                                 'जास्त',
                                 'अधिक',
                               ),
-                              style:
-                              const TextStyle(
+                              style: const TextStyle(
                                 fontSize: 11,
                                 color: Colors.grey,
                               ),
@@ -1341,12 +1220,9 @@ class _GrowthScreenState extends State<GrowthScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         _t(
@@ -1357,23 +1233,16 @@ class _GrowthScreenState extends State<GrowthScreen> {
                         ),
                         style: const TextStyle(
                           fontSize: 18,
-                          fontWeight:
-                          FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       if (records.isNotEmpty)
                         Text(
                           '${records.length} ${_t(
                             context,
-                            records.length == 1
-                                ? 'record'
-                                : 'records',
-                            records.length == 1
-                                ? 'नोंद'
-                                : 'नोंदी',
-                            records.length == 1
-                                ? 'रिकॉर्ड'
-                                : 'रिकॉर्ड',
+                            records.length == 1 ? 'record' : 'records',
+                            records.length == 1 ? 'नोंद' : 'नोंदी',
+                            records.length == 1 ? 'रिकॉर्ड' : 'रिकॉर्ड',
                           )}',
                           style: const TextStyle(
                             color: Colors.grey,
@@ -1382,18 +1251,14 @@ class _GrowthScreenState extends State<GrowthScreen> {
                         ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
                   if (records.isEmpty)
                     Container(
                       width: double.infinity,
-                      padding:
-                      const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius:
-                        BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(15),
                         border: Border.all(
                           color: Colors.grey.shade200,
                         ),
@@ -1420,28 +1285,21 @@ class _GrowthScreenState extends State<GrowthScreen> {
                     )
                   else
                     ...records.map(
-                          (record) {
+                      (record) {
                         final recordHeight =
-                        (record['height'] ?? '0')
-                            .toString();
+                            (record['height'] ?? '0').toString();
 
                         final recordWeight =
-                        (record['weight'] ?? '0')
-                            .toString();
+                            (record['weight'] ?? '0').toString();
 
                         return _buildRecord(
                           date: _formatDate(
-                            record['date'] ??
-                                record['createdAt'],
+                            record['date'] ?? record['createdAt'],
                           ),
-                          height:
-                          recordHeight.contains(
-                              'cm')
+                          height: recordHeight.contains('cm')
                               ? recordHeight
                               : '$recordHeight cm',
-                          weight:
-                          recordWeight.contains(
-                              'kg')
+                          weight: recordWeight.contains('kg')
                               ? recordWeight
                               : '$recordWeight kg',
                         );
@@ -1471,8 +1329,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
         ),
       ),
       child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
             icon,
@@ -1532,8 +1389,7 @@ class _GrowthScreenState extends State<GrowthScreen> {
             ),
           ),
           Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 height,

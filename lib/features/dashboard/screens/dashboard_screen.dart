@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
-import 'children_screen.dart';
-import 'add_child_screen.dart';
-import 'growth_screen.dart';
-import 'nutrition_screen.dart';
-import 'health_screen.dart';
-import 'alerts_screen.dart';
-import 'reports_screen.dart';
-import 'profile_screen.dart';
-import 'attendance_screen.dart';
+import '../../children/screens/children_screen.dart';
+import '../../children/screens/add_child_screen.dart';
+import '../../children/screens/growth_screen.dart';
+import '../../children/screens/nutrition_screen.dart';
+import '../../children/screens/health_screen.dart';
+import '../../children/screens/attendance_screen.dart';
+import '../../alerts/screens/alerts_screen.dart';
+import '../../reports/screens/reports_screen.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -53,12 +53,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       for (final document in snapshot.docs) {
         final data = document.data();
 
-        final status =
-        (data['growthStatus'] ??
-            data['growth_status'] ??
-            data['healthStatus'] ??
-            data['health_status'] ??
-            'Normal')
+        final status = (data['growthStatus'] ??
+                data['growth_status'] ??
+                data['healthStatus'] ??
+                data['health_status'] ??
+                'Normal')
             .toString()
             .toLowerCase();
 
@@ -201,13 +200,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildHeader(),
-
               const SizedBox(height: 22),
-
               _buildWelcomeCard(),
-
               const SizedBox(height: 22),
-
               Text(
                 l.overview,
                 style: TextStyle(
@@ -216,17 +211,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: darkBlue,
                 ),
               ),
-
               const SizedBox(height: 14),
-
               Row(
                 children: [
                   Expanded(
                     child: _buildOverviewCard(
                       title: l.totalChildren,
-                      value: isLoadingCounts
-                          ? '...'
-                          : totalChildren.toString(),
+                      value: isLoadingCounts ? '...' : totalChildren.toString(),
                       icon: Icons.child_care,
                       iconColor: primaryColor,
                       onTap: () {
@@ -240,9 +231,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Expanded(
                     child: _buildOverviewCard(
                       title: l.normal,
-                      value: isLoadingCounts
-                          ? '...'
-                          : normalChildren.toString(),
+                      value:
+                          isLoadingCounts ? '...' : normalChildren.toString(),
                       icon: Icons.check_circle_outline,
                       iconColor: Colors.green,
                       onTap: () {
@@ -254,17 +244,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 12),
-
               Row(
                 children: [
                   Expanded(
                     child: _buildOverviewCard(
                       title: l.moderate,
-                      value: isLoadingCounts
-                          ? '...'
-                          : moderateChildren.toString(),
+                      value:
+                          isLoadingCounts ? '...' : moderateChildren.toString(),
                       icon: Icons.warning_amber_outlined,
                       iconColor: Colors.orange,
                       onTap: () {
@@ -278,9 +265,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Expanded(
                     child: _buildOverviewCard(
                       title: l.severe,
-                      value: isLoadingCounts
-                          ? '...'
-                          : severeChildren.toString(),
+                      value:
+                          isLoadingCounts ? '...' : severeChildren.toString(),
                       icon: Icons.error_outline,
                       iconColor: Colors.red,
                       onTap: () {
@@ -292,9 +278,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 26),
-
               Text(
                 l.quickActions,
                 style: TextStyle(
@@ -303,9 +287,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: darkBlue,
                 ),
               ),
-
               const SizedBox(height: 14),
-
               Row(
                 children: [
                   Expanded(
@@ -325,9 +307,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 12),
-
               Row(
                 children: [
                   Expanded(
@@ -356,9 +336,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 12),
-
               Row(
                 children: [
                   Expanded(
@@ -373,9 +351,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 26),
-
               _buildSectionHeader(
                 title: l.alerts,
                 buttonText: l.viewAll,
@@ -385,9 +361,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   });
                 },
               ),
-
               const SizedBox(height: 12),
-
               _buildAlertCard(
                 title: l.vaccinationDue,
                 subtitle: l.vaccinationRecordsNeedAttention,
@@ -399,9 +373,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   });
                 },
               ),
-
               const SizedBox(height: 10),
-
               _buildAlertCard(
                 title: l.healthCheckupDue,
                 subtitle: l.upcomingChildHealthCheckup,
@@ -451,9 +423,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
-
         const SizedBox(width: 12),
-
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -477,7 +447,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
-
         IconButton(
           onPressed: () {
             setState(() {
@@ -532,9 +501,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 const SizedBox(height: 7),
-
                 Text(
                   l.manageChildRecords,
                   style: const TextStyle(
@@ -543,9 +510,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     height: 1.4,
                   ),
                 ),
-
                 const SizedBox(height: 15),
-
                 ElevatedButton(
                   onPressed: _openAddChild,
                   style: ElevatedButton.styleFrom(
@@ -566,9 +531,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
           ),
-
           const SizedBox(width: 10),
-
           const Icon(
             Icons.family_restroom,
             color: Colors.white,
@@ -619,9 +582,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   size: 25,
                 ),
               ),
-
               const SizedBox(width: 11),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -634,9 +595,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 2),
-
                     Text(
                       title,
                       maxLines: 2,
@@ -688,9 +647,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 color: primaryColor,
                 size: 32,
               ),
-
               const SizedBox(height: 8),
-
               Text(
                 title,
                 style: TextStyle(
@@ -723,7 +680,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
-
         TextButton(
           onPressed: onTap,
           child: Text(
@@ -778,9 +734,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   size: 24,
                 ),
               ),
-
               const SizedBox(width: 13),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -793,9 +747,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     const SizedBox(height: 4),
-
                     Text(
                       subtitle,
                       style: const TextStyle(
@@ -806,7 +758,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ],
                 ),
               ),
-
               const Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.grey,
@@ -825,48 +776,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-
       body: Material(
         color: backgroundColor,
         child: _getScreen(),
       ),
-
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         backgroundColor: Colors.white,
         indicatorColor: primaryColor.withValues(alpha: 0.12),
-
         onDestinationSelected: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),
             selectedIcon: const Icon(Icons.home),
             label: l.home,
           ),
-
           NavigationDestination(
             icon: const Icon(Icons.people_outline),
             selectedIcon: const Icon(Icons.people),
             label: l.children,
           ),
-
           NavigationDestination(
             icon: const Icon(Icons.notifications_none),
             selectedIcon: const Icon(Icons.notifications),
             label: l.alerts,
           ),
-
           NavigationDestination(
             icon: const Icon(Icons.assessment_outlined),
             selectedIcon: const Icon(Icons.assessment),
             label: l.reports,
           ),
-
           NavigationDestination(
             icon: const Icon(Icons.person_outline),
             selectedIcon: const Icon(Icons.person),

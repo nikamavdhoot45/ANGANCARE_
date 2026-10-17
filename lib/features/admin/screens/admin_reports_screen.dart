@@ -1,19 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class AdminReportsScreen extends StatefulWidget {
   const AdminReportsScreen({super.key});
 
   @override
-  State<AdminReportsScreen> createState() =>
-      _AdminReportsScreenState();
+  State<AdminReportsScreen> createState() => _AdminReportsScreenState();
 }
 
 class _AdminReportsScreenState extends State<AdminReportsScreen> {
-  final FirebaseFirestore _firestore =
-      FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool isLoading = true;
 
@@ -27,13 +25,12 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
   int inactiveWorkers = 0;
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       return marathi;
@@ -58,11 +55,9 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     });
 
     try {
-      final childrenSnapshot =
-      await _firestore.collection('children').get();
+      final childrenSnapshot = await _firestore.collection('children').get();
 
-      final workersSnapshot =
-      await _firestore.collection('workers').get();
+      final workersSnapshot = await _firestore.collection('workers').get();
 
       int normal = 0;
       int moderate = 0;
@@ -71,10 +66,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       for (final doc in childrenSnapshot.docs) {
         final data = doc.data();
 
-        final status = data['growthStatus']
-            ?.toString()
-            .trim()
-            .toLowerCase();
+        final status = data['growthStatus']?.toString().trim().toLowerCase();
 
         if (status == 'normal') {
           normal++;
@@ -169,8 +161,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
           const SizedBox(width: 13),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -201,9 +192,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     required int value,
     required Color color,
   }) {
-    final percentage = totalChildren == 0
-        ? 0.0
-        : value / totalChildren;
+    final percentage = totalChildren == 0 ? 0.0 : value / totalChildren;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -262,8 +251,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
               value: percentage,
               minHeight: 8,
               backgroundColor: Colors.grey.shade200,
-              valueColor:
-              AlwaysStoppedAnimation<Color>(color),
+              valueColor: AlwaysStoppedAnimation<Color>(color),
             ),
           ),
         ],
@@ -273,9 +261,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
 
   Widget _buildWorkerStatusCard() {
     final activePercentage =
-    totalWorkers == 0
-        ? 0.0
-        : activeWorkers / totalWorkers;
+        totalWorkers == 0 ? 0.0 : activeWorkers / totalWorkers;
 
     return Container(
       width: double.infinity,
@@ -288,8 +274,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
         ),
       ),
       child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             _t(
@@ -340,10 +325,8 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
             child: LinearProgressIndicator(
               value: activePercentage,
               minHeight: 9,
-              backgroundColor:
-              Colors.orange.withValues(alpha: 0.15),
-              valueColor:
-              const AlwaysStoppedAnimation<Color>(
+              backgroundColor: Colors.orange.withValues(alpha: 0.15),
+              valueColor: const AlwaysStoppedAnimation<Color>(
                 Colors.green,
               ),
             ),
@@ -358,12 +341,13 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
     required int value,
     required Color color,
   }) {
-    final isActive = title == _t(
-      context,
-      'Active',
-      'सक्रिय',
-      'सक्रिय',
-    );
+    final isActive = title ==
+        _t(
+          context,
+          'Active',
+          'सक्रिय',
+          'सक्रिय',
+        );
 
     return Container(
       padding: const EdgeInsets.all(13),
@@ -374,17 +358,14 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       child: Row(
         children: [
           Icon(
-            isActive
-                ? Icons.check_circle_outline
-                : Icons.pause_circle_outline,
+            isActive ? Icons.check_circle_outline : Icons.pause_circle_outline,
             color: color,
             size: 22,
           ),
           const SizedBox(width: 9),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -444,174 +425,170 @@ class _AdminReportsScreenState extends State<AdminReportsScreen> {
       ),
       body: isLoading
           ? const Center(
-        child: CircularProgressIndicator(
-          color: Color(0xFFF45170),
-        ),
-      )
+              child: CircularProgressIndicator(
+                color: Color(0xFFF45170),
+              ),
+            )
           : RefreshIndicator(
-        color: const Color(0xFFF45170),
-        onRefresh: _loadReports,
-        child: SingleChildScrollView(
-          physics:
-          const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
-            children: [
-              Text(
-                _t(
-                  context,
-                  'System Reports',
-                  'सिस्टम अहवाल',
-                  'सिस्टम रिपोर्ट',
-                ),
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF29266F),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                _t(
-                  context,
-                  'Overview of children and worker data.',
-                  'मुले आणि कार्यकर्त्यांच्या डेटाचा आढावा.',
-                  'बच्चों और कार्यकर्ताओं के डेटा का अवलोकन।',
-                ),
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 25),
-              Text(
-                _t(
-                  context,
-                  'Children Overview',
-                  'मुलांचा आढावा',
-                  'बच्चों का अवलोकन',
-                ),
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF29266F),
-                ),
-              ),
-              const SizedBox(height: 12),
-              _buildStatCard(
-                icon: Icons.child_care_outlined,
-                title: _t(
-                  context,
-                  'Total Children',
-                  'एकूण मुले',
-                  'कुल बच्चे',
-                ),
-                value: totalChildren,
-                color: const Color(0xFFF45170),
-              ),
-              const SizedBox(height: 12),
-              _buildStatusRow(
-                title: _t(
-                  context,
-                  'Normal',
-                  'सामान्य',
-                  'सामान्य',
-                ),
-                value: normalChildren,
-                color: Colors.green,
-              ),
-              _buildStatusRow(
-                title: _t(
-                  context,
-                  'Moderate',
-                  'मध्यम',
-                  'मध्यम',
-                ),
-                value: moderateChildren,
-                color: Colors.orange,
-              ),
-              _buildStatusRow(
-                title: _t(
-                  context,
-                  'Severe',
-                  'गंभीर',
-                  'गंभीर',
-                ),
-                value: severeChildren,
-                color: Colors.red,
-              ),
-              const SizedBox(height: 18),
-              Text(
-                _t(
-                  context,
-                  'Worker Overview',
-                  'कार्यकर्ता आढावा',
-                  'कार्यकर्ता अवलोकन',
-                ),
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF29266F),
-                ),
-              ),
-              const SizedBox(height: 12),
-              _buildStatCard(
-                icon: Icons.people_outline,
-                title: _t(
-                  context,
-                  'Total Workers',
-                  'एकूण कार्यकर्ते',
-                  'कुल कार्यकर्ता',
-                ),
-                value: totalWorkers,
-                color: const Color(0xFF2196F3),
-              ),
-              const SizedBox(height: 12),
-              _buildWorkerStatusCard(),
-              const SizedBox(height: 25),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFCE4EC),
-                  borderRadius:
-                  BorderRadius.circular(15),
-                ),
-                child: Row(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              color: const Color(0xFFF45170),
+              onRefresh: _loadReports,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.info_outline,
-                      color: Color(0xFFF45170),
-                      size: 24,
-                    ),
-                    const SizedBox(width: 11),
-                    Expanded(
-                      child: Text(
-                        _t(
-                          context,
-                          'These reports are calculated from the current data stored in Firebase Firestore.',
-                          'हे अहवाल Firebase Firestore मध्ये साठवलेल्या सध्याच्या डेटावर आधारित आहेत.',
-                          'ये रिपोर्ट Firebase Firestore में संग्रहीत वर्तमान डेटा के आधार पर तैयार की गई हैं।',
-                        ),
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF29266F),
-                          height: 1.4,
-                        ),
+                    Text(
+                      _t(
+                        context,
+                        'System Reports',
+                        'सिस्टम अहवाल',
+                        'सिस्टम रिपोर्ट',
+                      ),
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF29266F),
                       ),
                     ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _t(
+                        context,
+                        'Overview of children and worker data.',
+                        'मुले आणि कार्यकर्त्यांच्या डेटाचा आढावा.',
+                        'बच्चों और कार्यकर्ताओं के डेटा का अवलोकन।',
+                      ),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    Text(
+                      _t(
+                        context,
+                        'Children Overview',
+                        'मुलांचा आढावा',
+                        'बच्चों का अवलोकन',
+                      ),
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF29266F),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildStatCard(
+                      icon: Icons.child_care_outlined,
+                      title: _t(
+                        context,
+                        'Total Children',
+                        'एकूण मुले',
+                        'कुल बच्चे',
+                      ),
+                      value: totalChildren,
+                      color: const Color(0xFFF45170),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildStatusRow(
+                      title: _t(
+                        context,
+                        'Normal',
+                        'सामान्य',
+                        'सामान्य',
+                      ),
+                      value: normalChildren,
+                      color: Colors.green,
+                    ),
+                    _buildStatusRow(
+                      title: _t(
+                        context,
+                        'Moderate',
+                        'मध्यम',
+                        'मध्यम',
+                      ),
+                      value: moderateChildren,
+                      color: Colors.orange,
+                    ),
+                    _buildStatusRow(
+                      title: _t(
+                        context,
+                        'Severe',
+                        'गंभीर',
+                        'गंभीर',
+                      ),
+                      value: severeChildren,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 18),
+                    Text(
+                      _t(
+                        context,
+                        'Worker Overview',
+                        'कार्यकर्ता आढावा',
+                        'कार्यकर्ता अवलोकन',
+                      ),
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF29266F),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildStatCard(
+                      icon: Icons.people_outline,
+                      title: _t(
+                        context,
+                        'Total Workers',
+                        'एकूण कार्यकर्ते',
+                        'कुल कार्यकर्ता',
+                      ),
+                      value: totalWorkers,
+                      color: const Color(0xFF2196F3),
+                    ),
+                    const SizedBox(height: 12),
+                    _buildWorkerStatusCard(),
+                    const SizedBox(height: 25),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFCE4EC),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.info_outline,
+                            color: Color(0xFFF45170),
+                            size: 24,
+                          ),
+                          const SizedBox(width: 11),
+                          Expanded(
+                            child: Text(
+                              _t(
+                                context,
+                                'These reports are calculated from the current data stored in Firebase Firestore.',
+                                'हे अहवाल Firebase Firestore मध्ये साठवलेल्या सध्याच्या डेटावर आधारित आहेत.',
+                                'ये रिपोर्ट Firebase Firestore में संग्रहीत वर्तमान डेटा के आधार पर तैयार की गई हैं।',
+                              ),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFF29266F),
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

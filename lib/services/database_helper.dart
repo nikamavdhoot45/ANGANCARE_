@@ -49,14 +49,13 @@ class DatabaseHelper {
   // =========================
 
   Future<String> insertChild(
-      Map<String, dynamic> child,
-      ) async {
+    Map<String, dynamic> child,
+  ) async {
     final data = Map<String, dynamic>.from(child);
 
     data['createdAt'] = FieldValue.serverTimestamp();
 
-    final doc =
-    await _firestore.collection('children').add(data);
+    final doc = await _firestore.collection('children').add(data);
 
     return doc.id;
   }
@@ -76,10 +75,9 @@ class DatabaseHelper {
   }
 
   Future<Map<String, dynamic>?> getChild(
-      String id,
-      ) async {
-    final doc =
-    await _firestore.collection('children').doc(id).get();
+    String id,
+  ) async {
+    final doc = await _firestore.collection('children').doc(id).get();
 
     if (!doc.exists) {
       return null;
@@ -92,24 +90,20 @@ class DatabaseHelper {
   }
 
   Future<void> updateChild(
-      String id,
-      Map<String, dynamic> child,
-      ) async {
+    String id,
+    Map<String, dynamic> child,
+  ) async {
     final data = Map<String, dynamic>.from(child);
 
     data['updatedAt'] = FieldValue.serverTimestamp();
 
-    await _firestore
-        .collection('children')
-        .doc(id)
-        .update(data);
+    await _firestore.collection('children').doc(id).update(data);
   }
 
   Future<void> deleteChild(
-      String id,
-      ) async {
-    final childRef =
-    _firestore.collection('children').doc(id);
+    String id,
+  ) async {
+    final childRef = _firestore.collection('children').doc(id);
 
     await _deleteSubcollection(
       childRef.collection('growthRecords'),
@@ -131,8 +125,8 @@ class DatabaseHelper {
   }
 
   Future<void> _deleteSubcollection(
-      CollectionReference collection,
-      ) async {
+    CollectionReference collection,
+  ) async {
     final snapshot = await collection.get();
 
     for (final doc in snapshot.docs) {
@@ -145,9 +139,9 @@ class DatabaseHelper {
   // =========================
 
   Future<String> insertGrowthRecord(
-      String childId,
-      Map<String, dynamic> record,
-      ) async {
+    String childId,
+    Map<String, dynamic> record,
+  ) async {
     final data = Map<String, dynamic>.from(record);
 
     data['createdAt'] = FieldValue.serverTimestamp();
@@ -162,8 +156,8 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getGrowthRecords(
-      String childId,
-      ) async {
+    String childId,
+  ) async {
     final snapshot = await _firestore
         .collection('children')
         .doc(childId)
@@ -184,9 +178,9 @@ class DatabaseHelper {
   // =========================
 
   Future<String> insertNutritionRecord(
-      String childId,
-      Map<String, dynamic> record,
-      ) async {
+    String childId,
+    Map<String, dynamic> record,
+  ) async {
     final data = Map<String, dynamic>.from(record);
 
     data['createdAt'] = FieldValue.serverTimestamp();
@@ -201,8 +195,8 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getNutritionRecords(
-      String childId,
-      ) async {
+    String childId,
+  ) async {
     final snapshot = await _firestore
         .collection('children')
         .doc(childId)
@@ -223,9 +217,9 @@ class DatabaseHelper {
   // =========================
 
   Future<String> insertVaccinationRecord(
-      String childId,
-      Map<String, dynamic> record,
-      ) async {
+    String childId,
+    Map<String, dynamic> record,
+  ) async {
     final data = Map<String, dynamic>.from(record);
 
     data['createdAt'] = FieldValue.serverTimestamp();
@@ -240,8 +234,8 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getVaccinationRecords(
-      String childId,
-      ) async {
+    String childId,
+  ) async {
     final snapshot = await _firestore
         .collection('children')
         .doc(childId)
@@ -262,9 +256,9 @@ class DatabaseHelper {
   // =========================
 
   Future<String> insertHealthRecord(
-      String childId,
-      Map<String, dynamic> record,
-      ) async {
+    String childId,
+    Map<String, dynamic> record,
+  ) async {
     final data = Map<String, dynamic>.from(record);
 
     data['createdAt'] = FieldValue.serverTimestamp();
@@ -279,8 +273,8 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getHealthRecords(
-      String childId,
-      ) async {
+    String childId,
+  ) async {
     final snapshot = await _firestore
         .collection('children')
         .doc(childId)
@@ -301,8 +295,7 @@ class DatabaseHelper {
   // =========================
 
   Future<int> getTotalChildren() async {
-    final snapshot =
-    await _firestore.collection('children').count().get();
+    final snapshot = await _firestore.collection('children').count().get();
 
     return snapshot.count ?? 0;
   }

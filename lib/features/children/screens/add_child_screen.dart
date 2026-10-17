@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class AddChildScreen extends StatefulWidget {
   final String? childId;
@@ -57,13 +57,12 @@ class _AddChildScreenState extends State<AddChildScreen> {
   // =========================
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') return marathi;
     if (languageCode == 'hi') return hindi;
@@ -126,68 +125,46 @@ class _AddChildScreenState extends State<AddChildScreen> {
   }
 
   void _loadExistingChild(Map<String, dynamic> child) {
-    nameController.text =
-        (child['name'] ?? '').toString();
+    nameController.text = (child['name'] ?? '').toString();
 
-    dobController.text =
-        (child['dateOfBirth'] ?? '').toString();
+    dobController.text = (child['dateOfBirth'] ?? '').toString();
 
-    motherNameController.text =
-        (child['motherName'] ?? '').toString();
+    motherNameController.text = (child['motherName'] ?? '').toString();
 
-    fatherNameController.text =
-        (child['fatherName'] ?? '').toString();
+    fatherNameController.text = (child['fatherName'] ?? '').toString();
 
-    guardianNameController.text =
-        (child['guardianName'] ?? '').toString();
+    guardianNameController.text = (child['guardianName'] ?? '').toString();
 
-    motherContactController.text =
-        (child['motherContact'] ?? '').toString();
+    motherContactController.text = (child['motherContact'] ?? '').toString();
 
-    fatherContactController.text =
-        (child['fatherContact'] ?? '').toString();
+    fatherContactController.text = (child['fatherContact'] ?? '').toString();
 
-    addressController.text =
-        (child['address'] ?? '').toString();
+    addressController.text = (child['address'] ?? '').toString();
 
-    anganwadiController.text =
-        (child['anganwadiCenter'] ?? '').toString();
+    anganwadiController.text = (child['anganwadiCenter'] ?? '').toString();
 
     heightController.text =
-    child['height'] != null
-        ? child['height'].toString()
-        : '';
+        child['height'] != null ? child['height'].toString() : '';
 
     weightController.text =
-    child['weight'] != null
-        ? child['weight'].toString()
-        : '';
+        child['weight'] != null ? child['weight'].toString() : '';
 
-    muacController.text =
-    child['muac'] != null
-        ? child['muac'].toString()
-        : '';
+    muacController.text = child['muac'] != null ? child['muac'].toString() : '';
 
-    medicalNotesController.text =
-        (child['medicalNotes'] ?? '').toString();
+    medicalNotesController.text = (child['medicalNotes'] ?? '').toString();
 
-    selectedGender =
-        child['gender']?.toString();
+    selectedGender = child['gender']?.toString();
 
-    selectedGrowthStatus =
-        child['growthStatus']?.toString();
+    selectedGrowthStatus = child['growthStatus']?.toString();
 
-    selectedNutritionStatus =
-        child['nutritionStatus']?.toString();
+    selectedNutritionStatus = child['nutritionStatus']?.toString();
 
-    selectedHealthStatus =
-        child['healthStatus']?.toString();
+    selectedHealthStatus = child['healthStatus']?.toString();
 
-    calculatedAge =
-        int.tryParse(
+    calculatedAge = int.tryParse(
           (child['age'] ?? 0).toString(),
         ) ??
-            0;
+        0;
   }
 
   // =========================
@@ -227,8 +204,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
     if (dobController.text.trim().isNotEmpty) {
       try {
-        final parts =
-        dobController.text.trim().split('/');
+        final parts = dobController.text.trim().split('/');
 
         if (parts.length == 3) {
           initialDate = DateTime(
@@ -240,8 +216,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
       } catch (_) {}
     }
 
-    final DateTime? pickedDate =
-    await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2000),
@@ -254,20 +229,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
     final today = DateTime.now();
 
-    int age =
-        today.year - pickedDate.year;
+    int age = today.year - pickedDate.year;
 
     if (today.month < pickedDate.month ||
-        (today.month == pickedDate.month &&
-            today.day < pickedDate.day)) {
+        (today.month == pickedDate.month && today.day < pickedDate.day)) {
       age--;
     }
 
     setState(() {
       calculatedAge = age;
 
-      dobController.text =
-      '${pickedDate.day.toString().padLeft(2, '0')}/'
+      dobController.text = '${pickedDate.day.toString().padLeft(2, '0')}/'
           '${pickedDate.month.toString().padLeft(2, '0')}/'
           '${pickedDate.year}';
     });
@@ -278,24 +250,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
   // =========================
 
   double? _calculateBMI() {
-    final height =
-    double.tryParse(heightController.text);
+    final height = double.tryParse(heightController.text);
 
-    final weight =
-    double.tryParse(weightController.text);
+    final weight = double.tryParse(weightController.text);
 
-    if (height == null ||
-        weight == null ||
-        height <= 0 ||
-        weight <= 0) {
+    if (height == null || weight == null || height <= 0 || weight <= 0) {
       return null;
     }
 
-    final heightInMeters =
-        height / 100;
+    final heightInMeters = height / 100;
 
-    return weight /
-        (heightInMeters * heightInMeters);
+    return weight / (heightInMeters * heightInMeters);
   }
 
   // =========================
@@ -307,8 +272,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
       return;
     }
 
-    if (selectedGender == null ||
-        selectedGender!.trim().isEmpty) {
+    if (selectedGender == null || selectedGender!.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -349,68 +313,32 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
       final childData = <String, dynamic>{
         'name': nameController.text.trim(),
-
-        'dateOfBirth':
-        dobController.text.trim(),
-
+        'dateOfBirth': dobController.text.trim(),
         'age': calculatedAge,
-
-        'gender':
-        selectedGender!,
-
-        'motherName':
-        motherNameController.text.trim(),
-
-        'fatherName':
-        fatherNameController.text.trim(),
-
-        'guardianName':
-        guardianNameController.text.trim(),
-
-        'motherContact':
-        motherContactController.text.trim(),
-
-        'fatherContact':
-        fatherContactController.text.trim(),
-
-        'address':
-        addressController.text.trim(),
-
-        'anganwadiCenter':
-        anganwadiController.text.trim(),
-
-        'height':
-        double.tryParse(
+        'gender': selectedGender!,
+        'motherName': motherNameController.text.trim(),
+        'fatherName': fatherNameController.text.trim(),
+        'guardianName': guardianNameController.text.trim(),
+        'motherContact': motherContactController.text.trim(),
+        'fatherContact': fatherContactController.text.trim(),
+        'address': addressController.text.trim(),
+        'anganwadiCenter': anganwadiController.text.trim(),
+        'height': double.tryParse(
           heightController.text.trim(),
         ),
-
-        'weight':
-        double.tryParse(
+        'weight': double.tryParse(
           weightController.text.trim(),
         ),
-
         'bmi': bmi,
-
-        'muac':
-        double.tryParse(
+        'muac': double.tryParse(
           muacController.text.trim(),
         ),
-
-        'growthStatus':
-        selectedGrowthStatus ?? 'Normal',
-
-        'nutritionStatus':
-        selectedNutritionStatus ?? 'Normal',
-
-        'healthStatus':
-        selectedHealthStatus ?? 'Healthy',
-
+        'growthStatus': selectedGrowthStatus ?? 'Normal',
+        'nutritionStatus': selectedNutritionStatus ?? 'Normal',
+        'healthStatus': selectedHealthStatus ?? 'Healthy',
         'lastCheckup': null,
-
         'nextCheckup': null,
-
-        'medicalNotes':
-        medicalNotesController.text.trim(),
+        'medicalNotes': medicalNotesController.text.trim(),
       };
 
       // =========================
@@ -418,13 +346,9 @@ class _AddChildScreenState extends State<AddChildScreen> {
       // =========================
 
       if (widget.isEditMode) {
-        await _firestore
-            .collection('children')
-            .doc(widget.childId)
-            .update({
+        await _firestore.collection('children').doc(widget.childId).update({
           ...childData,
-          'updatedAt':
-          FieldValue.serverTimestamp(),
+          'updatedAt': FieldValue.serverTimestamp(),
         });
 
         if (!mounted) {
@@ -450,12 +374,9 @@ class _AddChildScreenState extends State<AddChildScreen> {
       // =========================
 
       else {
-        childData['createdAt'] =
-            FieldValue.serverTimestamp();
+        childData['createdAt'] = FieldValue.serverTimestamp();
 
-        await _firestore
-            .collection('children')
-            .add(childData);
+        await _firestore.collection('children').add(childData);
 
         if (!mounted) {
           return;
@@ -512,60 +433,45 @@ class _AddChildScreenState extends State<AddChildScreen> {
   // =========================
 
   InputDecoration _inputDecoration(
-      String label, {
-        IconData? icon,
-        String? hint,
-      }) {
+    String label, {
+    IconData? icon,
+    String? hint,
+  }) {
     return InputDecoration(
       labelText: label,
       hintText: hint,
       prefixIcon: icon == null
           ? null
           : Icon(
-        icon,
-        color:
-        const Color(0xFFF45170),
-      ),
+              icon,
+              color: const Color(0xFFF45170),
+            ),
       filled: true,
       fillColor: Colors.white,
       border: OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(12),
-        borderSide:
-        BorderSide.none,
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
       ),
-      enabledBorder:
-      OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(12),
-        borderSide:
-        BorderSide.none,
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
       ),
-      focusedBorder:
-      OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(12),
-        borderSide:
-        const BorderSide(
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
           color: Color(0xFFF45170),
           width: 1.5,
         ),
       ),
-      errorBorder:
-      OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(12),
-        borderSide:
-        const BorderSide(
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
           color: Colors.red,
         ),
       ),
-      focusedErrorBorder:
-      OutlineInputBorder(
-        borderRadius:
-        BorderRadius.circular(12),
-        borderSide:
-        const BorderSide(
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(
           color: Colors.red,
         ),
       ),
@@ -577,12 +483,11 @@ class _AddChildScreenState extends State<AddChildScreen> {
   // =========================
 
   Widget _sectionTitle(
-      String title,
-      IconData icon,
-      ) {
+    String title,
+    IconData icon,
+  ) {
     return Padding(
-      padding:
-      const EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 20,
         bottom: 12,
       ),
@@ -590,19 +495,15 @@ class _AddChildScreenState extends State<AddChildScreen> {
         children: [
           Icon(
             icon,
-            color:
-            const Color(0xFFF45170),
+            color: const Color(0xFFF45170),
           ),
           const SizedBox(width: 8),
           Text(
             title,
-            style:
-            const TextStyle(
+            style: const TextStyle(
               fontSize: 18,
-              fontWeight:
-              FontWeight.bold,
-              color:
-              Color(0xFF29266F),
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF29266F),
             ),
           ),
         ],
@@ -624,26 +525,18 @@ class _AddChildScreenState extends State<AddChildScreen> {
     bool isStatus = false,
   }) {
     return DropdownButtonFormField<String>(
-      initialValue:
-      items.contains(value)
-          ? value
-          : null,
-      decoration:
-      _inputDecoration(
-        requiredField
-            ? '$label *'
-            : label,
+      initialValue: items.contains(value) ? value : null,
+      decoration: _inputDecoration(
+        requiredField ? '$label *' : label,
       ),
       items: items.map(
-            (item) {
+        (item) {
           String displayItem = item;
 
           if (isGender) {
-            displayItem =
-                _genderText(context, item);
+            displayItem = _genderText(context, item);
           } else if (isStatus) {
-            displayItem =
-                _statusText(context, item);
+            displayItem = _statusText(context, item);
           }
 
           return DropdownMenuItem<String>(
@@ -655,18 +548,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
       onChanged: onChanged,
       validator: requiredField
           ? (value) {
-        if (value == null ||
-            value.trim().isEmpty) {
-          return _t(
-            context,
-            'Please select $label',
-            'कृपया $label निवडा',
-            'कृपया $label चुनें',
-          );
-        }
+              if (value == null || value.trim().isEmpty) {
+                return _t(
+                  context,
+                  'Please select $label',
+                  'कृपया $label निवडा',
+                  'कृपया $label चुनें',
+                );
+              }
 
-        return null;
-      }
+              return null;
+            }
           : null,
     );
   }
@@ -695,8 +587,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
         hint: hint,
       ),
       validator: (value) {
-        if (value == null ||
-            value.trim().isEmpty) {
+        if (value == null || value.trim().isEmpty) {
           return _t(
             context,
             'Please enter $label',
@@ -722,43 +613,35 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
     final title = isEditMode
         ? _t(
-      context,
-      'Edit Child',
-      'मुलाची माहिती संपादित करा',
-      'बच्चे की जानकारी संपादित करें',
-    )
+            context,
+            'Edit Child',
+            'मुलाची माहिती संपादित करा',
+            'बच्चे की जानकारी संपादित करें',
+          )
         : _t(
-      context,
-      'Add Child',
-      'मूल जोडा',
-      'बच्चा जोड़ें',
-    );
+            context,
+            'Add Child',
+            'मूल जोडा',
+            'बच्चा जोड़ें',
+          );
 
     return Scaffold(
-      backgroundColor:
-      const Color(0xFFFFFBF8),
-
+      backgroundColor: const Color(0xFFFFFBF8),
       appBar: AppBar(
         title: Text(title),
         centerTitle: true,
       ),
-
       body: Form(
         key: _formKey,
-
         child: SingleChildScrollView(
-          padding:
-          const EdgeInsets.fromLTRB(
+          padding: const EdgeInsets.fromLTRB(
             20,
             10,
             20,
             30,
           ),
-
           child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
-
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // =========================
               // CHILD INFORMATION
@@ -775,38 +658,31 @@ class _AddChildScreenState extends State<AddChildScreen> {
               ),
 
               _requiredTextField(
-                controller:
-                nameController,
+                controller: nameController,
                 label: _t(
                   context,
                   'Full Name',
                   'पूर्ण नाव',
                   'पूरा नाम',
                 ),
-                icon:
-                Icons.person_outline,
+                icon: Icons.person_outline,
               ),
 
               const SizedBox(height: 14),
 
               TextFormField(
-                controller:
-                dobController,
+                controller: dobController,
                 readOnly: true,
-                onTap:
-                _selectDateOfBirth,
-                decoration:
-                _inputDecoration(
+                onTap: _selectDateOfBirth,
+                decoration: _inputDecoration(
                   _t(
                     context,
                     'Date of Birth *',
                     'जन्मतारीख *',
                     'जन्म तिथि *',
                   ),
-                  icon: Icons
-                      .calendar_today_outlined,
-                  hint:
-                  _t(
+                  icon: Icons.calendar_today_outlined,
+                  hint: _t(
                     context,
                     'Select date of birth',
                     'जन्मतारीख निवडा',
@@ -814,8 +690,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   ),
                 ),
                 validator: (value) {
-                  if (value == null ||
-                      value.trim().isEmpty) {
+                  if (value == null || value.trim().isEmpty) {
                     return _t(
                       context,
                       'Please select date of birth',
@@ -830,26 +705,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
               const SizedBox(height: 10),
 
-              if (calculatedAge >= 0 &&
-                  dobController.text
-                      .trim()
-                      .isNotEmpty)
+              if (calculatedAge >= 0 && dobController.text.trim().isNotEmpty)
                 Container(
-                  width:
-                  double.infinity,
-                  padding:
-                  const EdgeInsets.all(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(
                     12,
                   ),
-                  decoration:
-                  BoxDecoration(
-                    color:
-                    const Color(
+                  decoration: BoxDecoration(
+                    color: const Color(
                       0xFFFCE4EC,
                     ),
-                    borderRadius:
-                    BorderRadius
-                        .circular(12),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${_t(
@@ -863,12 +729,9 @@ class _AddChildScreenState extends State<AddChildScreen> {
                       'वर्षे',
                       'वर्ष',
                     )}',
-                    style:
-                    const TextStyle(
-                      color:
-                      Color(0xFFF45170),
-                      fontWeight:
-                      FontWeight.bold,
+                    style: const TextStyle(
+                      color: Color(0xFFF45170),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -882,8 +745,7 @@ class _AddChildScreenState extends State<AddChildScreen> {
                   'लिंग',
                   'लिंग',
                 ),
-                value:
-                selectedGender,
+                value: selectedGender,
                 items: const [
                   'Male',
                   'Female',
@@ -891,11 +753,9 @@ class _AddChildScreenState extends State<AddChildScreen> {
                 ],
                 isGender: true,
                 requiredField: true,
-                onChanged:
-                    (value) {
+                onChanged: (value) {
                   setState(() {
-                    selectedGender =
-                        value;
+                    selectedGender = value;
                   });
                 },
               ),
@@ -915,118 +775,100 @@ class _AddChildScreenState extends State<AddChildScreen> {
               ),
 
               _requiredTextField(
-                controller:
-                motherNameController,
+                controller: motherNameController,
                 label: _t(
                   context,
                   "Mother's Name",
                   'आईचे नाव',
                   'माता का नाम',
                 ),
-                icon:
-                Icons.woman_outlined,
+                icon: Icons.woman_outlined,
               ),
 
               const SizedBox(height: 14),
 
               _requiredTextField(
-                controller:
-                fatherNameController,
+                controller: fatherNameController,
                 label: _t(
                   context,
                   "Father's Name",
                   'वडिलांचे नाव',
                   'पिता का नाम',
                 ),
-                icon:
-                Icons.man_outlined,
+                icon: Icons.man_outlined,
               ),
 
               const SizedBox(height: 14),
 
               TextFormField(
-                controller:
-                guardianNameController,
-                decoration:
-                _inputDecoration(
+                controller: guardianNameController,
+                decoration: _inputDecoration(
                   _t(
                     context,
                     "Guardian's Name",
                     'पालकाचे नाव',
                     'अभिभावक का नाम',
                   ),
-                  icon:
-                  Icons.people_outline,
+                  icon: Icons.people_outline,
                 ),
               ),
 
               const SizedBox(height: 14),
 
               _requiredTextField(
-                controller:
-                motherContactController,
+                controller: motherContactController,
                 label: _t(
                   context,
                   "Mother's Contact Number",
                   'आईचा संपर्क क्रमांक',
                   'माता का संपर्क नंबर',
                 ),
-                icon:
-                Icons.phone_outlined,
-                keyboardType:
-                TextInputType.phone,
+                icon: Icons.phone_outlined,
+                keyboardType: TextInputType.phone,
                 maxLength: 10,
               ),
 
               const SizedBox(height: 5),
 
               _requiredTextField(
-                controller:
-                fatherContactController,
+                controller: fatherContactController,
                 label: _t(
                   context,
                   "Father's Contact Number",
                   'वडिलांचा संपर्क क्रमांक',
                   'पिता का संपर्क नंबर',
                 ),
-                icon:
-                Icons.phone_outlined,
-                keyboardType:
-                TextInputType.phone,
+                icon: Icons.phone_outlined,
+                keyboardType: TextInputType.phone,
                 maxLength: 10,
               ),
 
               const SizedBox(height: 5),
 
               _requiredTextField(
-                controller:
-                addressController,
+                controller: addressController,
                 label: _t(
                   context,
                   'Address',
                   'पत्ता',
                   'पता',
                 ),
-                icon:
-                Icons.location_on_outlined,
+                icon: Icons.location_on_outlined,
                 maxLines: 2,
               ),
 
               const SizedBox(height: 14),
 
               TextFormField(
-                controller:
-                anganwadiController,
-                decoration:
-                _inputDecoration(
+                controller: anganwadiController,
+                decoration: _inputDecoration(
                   _t(
                     context,
                     'Anganwadi Center',
                     'अंगणवाडी केंद्र',
                     'आंगनवाड़ी केंद्र',
                   ),
-                  icon:
-                  Icons.home_work_outlined,
+                  icon: Icons.home_work_outlined,
                 ),
               ),
 
@@ -1047,23 +889,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
               Row(
                 children: [
                   Expanded(
-                    child:
-                    TextFormField(
-                      controller:
-                      heightController,
-                      keyboardType:
-                      const TextInputType
-                          .numberWithOptions(
+                    child: TextFormField(
+                      controller: heightController,
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      onChanged:
-                          (_) {
+                      onChanged: (_) {
                         setState(
-                              () {},
+                          () {},
                         );
                       },
-                      decoration:
-                      _inputDecoration(
+                      decoration: _inputDecoration(
                         _t(
                           context,
                           'Height',
@@ -1074,29 +910,21 @@ class _AddChildScreenState extends State<AddChildScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(
                     width: 12,
                   ),
-
                   Expanded(
-                    child:
-                    TextFormField(
-                      controller:
-                      weightController,
-                      keyboardType:
-                      const TextInputType
-                          .numberWithOptions(
+                    child: TextFormField(
+                      controller: weightController,
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      onChanged:
-                          (_) {
+                      onChanged: (_) {
                         setState(
-                              () {},
+                          () {},
                         );
                       },
-                      decoration:
-                      _inputDecoration(
+                      decoration: _inputDecoration(
                         _t(
                           context,
                           'Weight',
@@ -1113,18 +941,13 @@ class _AddChildScreenState extends State<AddChildScreen> {
               const SizedBox(height: 14),
 
               TextFormField(
-                controller:
-                muacController,
-                keyboardType:
-                const TextInputType
-                    .numberWithOptions(
+                controller: muacController,
+                keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                decoration:
-                _inputDecoration(
+                decoration: _inputDecoration(
                   'MUAC',
-                  hint:
-                  _t(
+                  hint: _t(
                     context,
                     'cm (optional)',
                     'सेमी (ऐच्छिक)',
@@ -1137,21 +960,15 @@ class _AddChildScreenState extends State<AddChildScreen> {
 
               if (bmi != null)
                 Container(
-                  width:
-                  double.infinity,
-                  padding:
-                  const EdgeInsets.all(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(
                     14,
                   ),
-                  decoration:
-                  BoxDecoration(
-                    color:
-                    const Color(
+                  decoration: BoxDecoration(
+                    color: const Color(
                       0xFFFCE4EC,
                     ),
-                    borderRadius:
-                    BorderRadius
-                        .circular(12),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '${_t(
@@ -1160,12 +977,9 @@ class _AddChildScreenState extends State<AddChildScreen> {
                       'गणना केलेला BMI',
                       'गणना किया गया BMI',
                     )}: ${bmi.toStringAsFixed(2)}',
-                    style:
-                    const TextStyle(
-                      fontWeight:
-                      FontWeight.bold,
-                      color:
-                      Color(0xFF29266F),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF29266F),
                     ),
                   ),
                 ),
@@ -1173,26 +987,22 @@ class _AddChildScreenState extends State<AddChildScreen> {
               const SizedBox(height: 14),
 
               _dropdown(
-                label:
-                _t(
+                label: _t(
                   context,
                   'Growth Status',
                   'वाढीची स्थिती',
                   'विकास की स्थिति',
                 ),
-                value:
-                selectedGrowthStatus,
+                value: selectedGrowthStatus,
                 items: const [
                   'Normal',
                   'Moderate',
                   'Severe',
                 ],
                 isStatus: true,
-                onChanged:
-                    (value) {
+                onChanged: (value) {
                   setState(() {
-                    selectedGrowthStatus =
-                        value;
+                    selectedGrowthStatus = value;
                   });
                 },
               ),
@@ -1212,26 +1022,22 @@ class _AddChildScreenState extends State<AddChildScreen> {
               ),
 
               _dropdown(
-                label:
-                _t(
+                label: _t(
                   context,
                   'Nutrition Status',
                   'पोषण स्थिती',
                   'पोषण की स्थिति',
                 ),
-                value:
-                selectedNutritionStatus,
+                value: selectedNutritionStatus,
                 items: const [
                   'Normal',
                   'Moderate',
                   'Severe',
                 ],
                 isStatus: true,
-                onChanged:
-                    (value) {
+                onChanged: (value) {
                   setState(() {
-                    selectedNutritionStatus =
-                        value;
+                    selectedNutritionStatus = value;
                   });
                 },
               ),
@@ -1253,26 +1059,22 @@ class _AddChildScreenState extends State<AddChildScreen> {
               ),
 
               _dropdown(
-                label:
-                _t(
+                label: _t(
                   context,
                   'Health Status',
                   'आरोग्य स्थिती',
                   'स्वास्थ्य की स्थिति',
                 ),
-                value:
-                selectedHealthStatus,
+                value: selectedHealthStatus,
                 items: const [
                   'Healthy',
                   'Needs Attention',
                   'Under Treatment',
                 ],
                 isStatus: true,
-                onChanged:
-                    (value) {
+                onChanged: (value) {
                   setState(() {
-                    selectedHealthStatus =
-                        value;
+                    selectedHealthStatus = value;
                   });
                 },
               ),
@@ -1280,21 +1082,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
               const SizedBox(height: 14),
 
               TextFormField(
-                controller:
-                medicalNotesController,
+                controller: medicalNotesController,
                 maxLines: 4,
-                decoration:
-                _inputDecoration(
+                decoration: _inputDecoration(
                   _t(
                     context,
                     'Medical Notes',
                     'वैद्यकीय नोंदी',
                     'चिकित्सा नोट्स',
                   ),
-                  icon:
-                  Icons.notes_outlined,
-                  hint:
-                  _t(
+                  icon: Icons.notes_outlined,
+                  hint: _t(
                     context,
                     'Enter any relevant notes',
                     'संबंधित नोंदी प्रविष्ट करा',
@@ -1310,58 +1108,47 @@ class _AddChildScreenState extends State<AddChildScreen> {
               // =========================
 
               SizedBox(
-                width:
-                double.infinity,
+                width: double.infinity,
                 height: 55,
-                child:
-                ElevatedButton.icon(
-                  onPressed: isSaving
-                      ? null
-                      : _saveChild,
+                child: ElevatedButton.icon(
+                  onPressed: isSaving ? null : _saveChild,
                   icon: isSaving
                       ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child:
-                    CircularProgressIndicator(
-                      strokeWidth:
-                      2,
-                      color:
-                      Colors.white,
-                    ),
-                  )
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
                       : const Icon(
-                    Icons
-                        .save_outlined,
-                  ),
+                          Icons.save_outlined,
+                        ),
                   label: Text(
                     isSaving
                         ? _t(
-                      context,
-                      'SAVING...',
-                      'जतन करत आहे...',
-                      'सहेजा जा रहा है...',
-                    )
+                            context,
+                            'SAVING...',
+                            'जतन करत आहे...',
+                            'सहेजा जा रहा है...',
+                          )
                         : widget.isEditMode
-                        ? _t(
-                      context,
-                      'UPDATE CHILD',
-                      'मुलाची माहिती अपडेट करा',
-                      'बच्चे की जानकारी अपडेट करें',
-                    )
-                        : _t(
-                      context,
-                      'SAVE CHILD',
-                      'मूल जतन करा',
-                      'बच्चे को सहेजें',
-                    ),
-                    style:
-                    const TextStyle(
+                            ? _t(
+                                context,
+                                'UPDATE CHILD',
+                                'मुलाची माहिती अपडेट करा',
+                                'बच्चे की जानकारी अपडेट करें',
+                              )
+                            : _t(
+                                context,
+                                'SAVE CHILD',
+                                'मूल जतन करा',
+                                'बच्चे को सहेजें',
+                              ),
+                    style: const TextStyle(
                       fontSize: 16,
-                      fontWeight:
-                      FontWeight.bold,
-                      letterSpacing:
-                      0.5,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ),
@@ -1370,20 +1157,17 @@ class _AddChildScreenState extends State<AddChildScreen> {
               const SizedBox(height: 10),
 
               SizedBox(
-                width:
-                double.infinity,
+                width: double.infinity,
                 height: 50,
-                child:
-                OutlinedButton(
+                child: OutlinedButton(
                   onPressed: isSaving
                       ? null
                       : () {
-                    Navigator.pop(
-                      context,
-                    );
-                  },
-                  child:
-                  Text(
+                          Navigator.pop(
+                            context,
+                          );
+                        },
+                  child: Text(
                     _t(
                       context,
                       'CANCEL',

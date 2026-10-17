@@ -1,10 +1,10 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../main.dart';
-import 'dashboard_screen.dart';
-import 'admin_dashboard_screen.dart';
+import '../../../main.dart';
+import '../../dashboard/screens/dashboard_screen.dart';
+import '../../dashboard/screens/admin_dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
   // ============================================================
 
   Future<void> _applyUserLanguage(
-      Map<String, dynamic>? data,
-      ) async {
+    Map<String, dynamic>? data,
+  ) async {
     String languageCode = 'en';
 
     final savedLanguage = data?['language'];
@@ -88,8 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final password = passwordController.text;
 
       // Firebase Authentication
-      final credential =
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -128,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = userDocument.data();
 
         final String role =
-        (data?['role'] ?? '').toString().trim().toLowerCase();
+            (data?['role'] ?? '').toString().trim().toLowerCase();
 
         if (role != 'admin') {
           await FirebaseAuth.instance.signOut();
@@ -160,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => const AdminDashboardScreen(),
           ),
-              (route) => false,
+          (route) => false,
         );
 
         return;
@@ -194,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final data = workerDocument.data();
 
         final String role =
-        (data?['role'] ?? '').toString().trim().toLowerCase();
+            (data?['role'] ?? '').toString().trim().toLowerCase();
 
         if (role != 'worker') {
           await FirebaseAuth.instance.signOut();
@@ -225,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
           _showError(
             'Your Worker account is currently inactive.\n\n'
-                'Please contact the administrator.',
+            'Please contact the administrator.',
           );
 
           return;
@@ -245,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(
             builder: (context) => const DashboardScreen(),
           ),
-              (route) => false,
+          (route) => false,
         );
 
         return;
@@ -264,7 +263,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       _showError(
         'Invalid login type.\n\n'
-            'Please select Admin or Worker.',
+        'Please select Admin or Worker.',
       );
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
@@ -297,18 +296,15 @@ class _LoginScreenState extends State<LoginScreen> {
           break;
 
         case 'too-many-requests':
-          message =
-          'Too many login attempts. Please try again later.';
+          message = 'Too many login attempts. Please try again later.';
           break;
 
         case 'network-request-failed':
-          message =
-          'Please check your internet connection.';
+          message = 'Please check your internet connection.';
           break;
 
         default:
-          message =
-          'Login failed.\n\n'
+          message = 'Login failed.\n\n'
               'Firebase error: ${e.message ?? e.code}';
       }
 
@@ -322,8 +318,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       _showError(
         'Firestore error.\n\n'
-            'Code: ${e.code}\n'
-            'Message: ${e.message ?? 'Unknown error'}',
+        'Code: ${e.code}\n'
+        'Message: ${e.message ?? 'Unknown error'}',
       );
     } catch (e) {
       if (!mounted) return;
@@ -397,22 +393,19 @@ class _LoginScreenState extends State<LoginScreen> {
         onTap: isLoading
             ? null
             : () {
-          setState(() {
-            selectedRole = role;
-          });
-        },
+                setState(() {
+                  selectedRole = role;
+                });
+              },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           height: 58,
           decoration: BoxDecoration(
-            color: isSelected
-                ? const Color(0xFFF45170)
-                : Colors.white,
+            color: isSelected ? const Color(0xFFF45170) : Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isSelected
-                  ? const Color(0xFFF45170)
-                  : Colors.grey.shade300,
+              color:
+                  isSelected ? const Color(0xFFF45170) : Colors.grey.shade300,
               width: 1.5,
             ),
           ),
@@ -422,17 +415,13 @@ class _LoginScreenState extends State<LoginScreen> {
               Icon(
                 icon,
                 size: 23,
-                color: isSelected
-                    ? Colors.white
-                    : const Color(0xFF29266F),
+                color: isSelected ? Colors.white : const Color(0xFF29266F),
               ),
               const SizedBox(width: 8),
               Text(
                 title,
                 style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : const Color(0xFF29266F),
+                  color: isSelected ? Colors.white : const Color(0xFF29266F),
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
                 ),
@@ -564,8 +553,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (value == null ||
-                          value.trim().isEmpty) {
+                      if (value == null || value.trim().isEmpty) {
                         return 'Please enter your email';
                       }
 
@@ -595,11 +583,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: isLoading
                             ? null
                             : () {
-                          setState(() {
-                            isPasswordVisible =
-                            !isPasswordVisible;
-                          });
-                        },
+                                setState(() {
+                                  isPasswordVisible = !isPasswordVisible;
+                                });
+                              },
                         icon: Icon(
                           isPasswordVisible
                               ? Icons.visibility_off_outlined
@@ -640,8 +627,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed:
-                      isLoading ? null : _forgotPassword,
+                      onPressed: isLoading ? null : _forgotPassword,
                       child: const Text(
                         'Forgot Password?',
                         style: TextStyle(
@@ -662,21 +648,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: isLoading ? null : _login,
                       child: isLoading
                           ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          color: Colors.white,
-                        ),
-                      )
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Colors.white,
+                              ),
+                            )
                           : const Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                              'LOGIN',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                     ),
                   ),
 

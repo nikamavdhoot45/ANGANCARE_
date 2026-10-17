@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class HealthScreen extends StatefulWidget {
   final String childName;
@@ -41,13 +41,12 @@ class _HealthScreenState extends State<HealthScreen> {
   List<Map<String, dynamic>> vaccinationReports = [];
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') return marathi;
     if (languageCode == 'hi') return hindi;
@@ -73,8 +72,7 @@ class _HealthScreenState extends State<HealthScreen> {
       DocumentSnapshot<Map<String, dynamic>>? childDocument;
 
       if (id != null && id.trim().isNotEmpty) {
-        final document =
-        await _firestore.collection('children').doc(id).get();
+        final document = await _firestore.collection('children').doc(id).get();
 
         if (document.exists) {
           childDocument = document;
@@ -85,9 +83,9 @@ class _HealthScreenState extends State<HealthScreen> {
         final query = await _firestore
             .collection('children')
             .where(
-          'name',
-          isEqualTo: widget.childName,
-        )
+              'name',
+              isEqualTo: widget.childName,
+            )
             .limit(1)
             .get();
 
@@ -119,7 +117,7 @@ class _HealthScreenState extends State<HealthScreen> {
       final childRef = _firestore.collection('children').doc(id);
 
       final List<QuerySnapshot<Map<String, dynamic>>> results =
-      await Future.wait<QuerySnapshot<Map<String, dynamic>>>([
+          await Future.wait<QuerySnapshot<Map<String, dynamic>>>([
         childRef.collection('healthRecords').get(),
         childRef.collection('vaccinationRecords').get(),
         childRef.collection('healthReports').get(),
@@ -131,8 +129,7 @@ class _HealthScreenState extends State<HealthScreen> {
       final reportsSnapshot = results[2];
       final vaccinationReportsSnapshot = results[3];
 
-      final loadedHealthRecords =
-      healthSnapshot.docs.map((doc) {
+      final loadedHealthRecords = healthSnapshot.docs.map((doc) {
         final data = Map<String, dynamic>.from(doc.data());
         data['recordId'] = doc.id;
         return data;
@@ -142,8 +139,7 @@ class _HealthScreenState extends State<HealthScreen> {
         return _getDate(b).compareTo(_getDate(a));
       });
 
-      final loadedVaccinationRecords =
-      vaccinationSnapshot.docs.map((doc) {
+      final loadedVaccinationRecords = vaccinationSnapshot.docs.map((doc) {
         final data = Map<String, dynamic>.from(doc.data());
         data['recordId'] = doc.id;
         return data;
@@ -153,8 +149,7 @@ class _HealthScreenState extends State<HealthScreen> {
         return _getDate(b).compareTo(_getDate(a));
       });
 
-      final loadedReports =
-      reportsSnapshot.docs.map((doc) {
+      final loadedReports = reportsSnapshot.docs.map((doc) {
         final data = Map<String, dynamic>.from(doc.data());
         data['reportId'] = doc.id;
         return data;
@@ -165,7 +160,7 @@ class _HealthScreenState extends State<HealthScreen> {
       });
 
       final loadedVaccinationReports =
-      vaccinationReportsSnapshot.docs.map((doc) {
+          vaccinationReportsSnapshot.docs.map((doc) {
         final data = Map<String, dynamic>.from(doc.data());
         data['reportId'] = doc.id;
         return data;
@@ -252,8 +247,7 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   String _monthName(int month) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') {
       const months = [
@@ -376,17 +370,16 @@ class _HealthScreenState extends State<HealthScreen> {
     final record = healthRecords.first;
 
     return (record['status'] ??
-        record['healthStatus'] ??
-        record['condition'] ??
-        'Recorded')
+            record['healthStatus'] ??
+            record['condition'] ??
+            'Recorded')
         .toString();
   }
 
   Color _statusColor(String status) {
     final value = status.toLowerCase();
 
-    if (value.contains('severe') ||
-        value.contains('critical')) {
+    if (value.contains('severe') || value.contains('critical')) {
       return const Color(0xFFF44336);
     }
 
@@ -424,8 +417,7 @@ class _HealthScreenState extends State<HealthScreen> {
       return const Color(0xFFFFF3E0);
     }
 
-    if (value.contains('severe') ||
-        value.contains('critical')) {
+    if (value.contains('severe') || value.contains('critical')) {
       return const Color(0xFFFFEBEE);
     }
 
@@ -433,12 +425,10 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Future<void> _addHealthRecord() async {
-    if (_resolvedChildId == null ||
-        _resolvedChildId!.isEmpty) {
+    if (_resolvedChildId == null || _resolvedChildId!.isEmpty) {
       await _loadHealthData();
 
-      if (_resolvedChildId == null ||
-          _resolvedChildId!.isEmpty) {
+      if (_resolvedChildId == null || _resolvedChildId!.isEmpty) {
         if (!mounted) return;
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -507,8 +497,7 @@ class _HealthScreenState extends State<HealthScreen> {
                     const SizedBox(height: 12),
                     TextField(
                       controller: temperatureController,
-                      keyboardType:
-                      const TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
                       decoration: InputDecoration(
@@ -645,8 +634,7 @@ class _HealthScreenState extends State<HealthScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final condition =
-                    conditionController.text.trim();
+                    final condition = conditionController.text.trim();
 
                     if (condition.isEmpty) {
                       ScaffoldMessenger.of(
@@ -668,8 +656,7 @@ class _HealthScreenState extends State<HealthScreen> {
 
                     final currentId = _resolvedChildId;
 
-                    if (currentId == null ||
-                        currentId.isEmpty) {
+                    if (currentId == null || currentId.isEmpty) {
                       return;
                     }
 
@@ -680,13 +667,11 @@ class _HealthScreenState extends State<HealthScreen> {
                           .collection('healthRecords')
                           .add({
                         'condition': condition,
-                        'temperature':
-                        temperatureController.text.trim(),
+                        'temperature': temperatureController.text.trim(),
                         'status': selectedStatus,
                         'date': Timestamp.fromDate(selectedDate),
                         'notes': notesController.text.trim(),
-                        'createdAt':
-                        Timestamp.fromDate(DateTime.now()),
+                        'createdAt': Timestamp.fromDate(DateTime.now()),
                       });
 
                       if (!dialogContext.mounted) return;
@@ -783,13 +768,11 @@ class _HealthScreenState extends State<HealthScreen> {
     required Future<void> Function() onGallery,
     required Future<void> Function() onFile,
   }) async {
-    if (_resolvedChildId == null ||
-        _resolvedChildId!.isEmpty) {
+    if (_resolvedChildId == null || _resolvedChildId!.isEmpty) {
       await _loadHealthData();
     }
 
-    if (_resolvedChildId == null ||
-        _resolvedChildId!.isEmpty) {
+    if (_resolvedChildId == null || _resolvedChildId!.isEmpty) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -838,8 +821,7 @@ class _HealthScreenState extends State<HealthScreen> {
                     height: 5,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
-                      borderRadius:
-                      BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   const SizedBox(height: 18),
@@ -938,8 +920,7 @@ class _HealthScreenState extends State<HealthScreen> {
               height: 50,
               decoration: BoxDecoration(
                 color: const Color(0xFFFFE1E7),
-                borderRadius:
-                BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
                 icon,
@@ -949,8 +930,7 @@ class _HealthScreenState extends State<HealthScreen> {
             const SizedBox(width: 14),
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
@@ -1054,9 +1034,8 @@ class _HealthScreenState extends State<HealthScreen> {
         return;
       }
 
-      final prefix = reportType == 'vaccination'
-          ? 'vaccination_report'
-          : 'health_report';
+      final prefix =
+          reportType == 'vaccination' ? 'vaccination_report' : 'health_report';
 
       await _uploadReport(
         imageFile,
@@ -1162,10 +1141,10 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Future<void> _uploadReport(
-      File file,
-      String fileName,
-      String reportType,
-      ) async {
+    File file,
+    String fileName,
+    String reportType,
+  ) async {
     final id = _resolvedChildId;
 
     if (id == null || id.isEmpty) {
@@ -1238,23 +1217,19 @@ class _HealthScreenState extends State<HealthScreen> {
     });
 
     try {
-      final timestamp =
-          DateTime.now().millisecondsSinceEpoch;
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
 
       final safeFileName = fileName.replaceAll(
         RegExp(r'[^a-zA-Z0-9._-]'),
         '_',
       );
 
-      final folder = reportType == 'vaccination'
-          ? 'vaccinationReports'
-          : 'healthReports';
+      final folder =
+          reportType == 'vaccination' ? 'vaccinationReports' : 'healthReports';
 
-      final storagePath =
-          'children/$id/$folder/${timestamp}_$safeFileName';
+      final storagePath = 'children/$id/$folder/${timestamp}_$safeFileName';
 
-      final storageRef =
-      FirebaseStorage.instance.ref().child(storagePath);
+      final storageRef = FirebaseStorage.instance.ref().child(storagePath);
 
       final contentType = _getContentType(fileName);
 
@@ -1272,22 +1247,18 @@ class _HealthScreenState extends State<HealthScreen> {
         metadata,
       );
 
-      final uploadSnapshot =
-      await uploadTask;
+      final uploadSnapshot = await uploadTask;
 
-      if (uploadSnapshot.state !=
-          TaskState.success) {
+      if (uploadSnapshot.state != TaskState.success) {
         throw Exception(
           'Firebase Storage upload did not complete successfully.',
         );
       }
 
-      final downloadUrl =
-      await storageRef.getDownloadURL();
+      final downloadUrl = await storageRef.getDownloadURL();
 
-      final collectionName = reportType == 'vaccination'
-          ? 'vaccinationReports'
-          : 'healthReports';
+      final collectionName =
+          reportType == 'vaccination' ? 'vaccinationReports' : 'healthReports';
 
       await _firestore
           .collection('children')
@@ -1301,8 +1272,7 @@ class _HealthScreenState extends State<HealthScreen> {
         'contentType': contentType,
         'reportType': reportType,
         'uploadedBy': currentUser.uid,
-        'uploadedAt':
-        Timestamp.fromDate(DateTime.now()),
+        'uploadedAt': Timestamp.fromDate(DateTime.now()),
       });
 
       await _loadHealthData();
@@ -1315,17 +1285,17 @@ class _HealthScreenState extends State<HealthScreen> {
           content: Text(
             reportType == 'vaccination'
                 ? _t(
-              context,
-              'Vaccination report uploaded successfully.',
-              'लसीकरण अहवाल यशस्वीरित्या अपलोड झाला.',
-              'टीकाकरण रिपोर्ट सफलतापूर्वक अपलोड हुआ।',
-            )
+                    context,
+                    'Vaccination report uploaded successfully.',
+                    'लसीकरण अहवाल यशस्वीरित्या अपलोड झाला.',
+                    'टीकाकरण रिपोर्ट सफलतापूर्वक अपलोड हुआ।',
+                  )
                 : _t(
-              context,
-              'Health report uploaded successfully.',
-              'आरोग्य अहवाल यशस्वीरित्या अपलोड झाला.',
-              'स्वास्थ्य रिपोर्ट सफलतापूर्वक अपलोड हुआ।',
-            ),
+                    context,
+                    'Health report uploaded successfully.',
+                    'आरोग्य अहवाल यशस्वीरित्या अपलोड झाला.',
+                    'स्वास्थ्य रिपोर्ट सफलतापूर्वक अपलोड हुआ।',
+                  ),
           ),
         ),
       );
@@ -1335,8 +1305,7 @@ class _HealthScreenState extends State<HealthScreen> {
       String errorMessage = e.toString();
 
       if (e is FirebaseException) {
-        errorMessage =
-        '${e.code}: ${e.message ?? 'Firebase error'}';
+        errorMessage = '${e.code}: ${e.message ?? 'Firebase error'}';
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1345,17 +1314,17 @@ class _HealthScreenState extends State<HealthScreen> {
           content: Text(
             reportType == 'vaccination'
                 ? '${_t(
-              context,
-              'Unable to upload vaccination report',
-              'लसीकरण अहवाल अपलोड करता आला नाही',
-              'टीकाकरण रिपोर्ट अपलोड नहीं हो सका',
-            )}: $errorMessage'
+                    context,
+                    'Unable to upload vaccination report',
+                    'लसीकरण अहवाल अपलोड करता आला नाही',
+                    'टीकाकरण रिपोर्ट अपलोड नहीं हो सका',
+                  )}: $errorMessage'
                 : '${_t(
-              context,
-              'Unable to upload health report',
-              'आरोग्य अहवाल अपलोड करता आला नाही',
-              'स्वास्थ्य रिपोर्ट अपलोड नहीं हुआ',
-            )}: $errorMessage',
+                    context,
+                    'Unable to upload health report',
+                    'आरोग्य अहवाल अपलोड करता आला नाही',
+                    'स्वास्थ्य रिपोर्ट अपलोड नहीं हुआ',
+                  )}: $errorMessage',
           ),
         ),
       );
@@ -1373,8 +1342,7 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   String _getContentType(String fileName) {
-    final extension =
-    fileName.split('.').last.toLowerCase();
+    final extension = fileName.split('.').last.toLowerCase();
 
     switch (extension) {
       case 'pdf':
@@ -1396,32 +1364,25 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   String _getFileType(String fileName) {
-    final extension =
-    fileName.split('.').last.toLowerCase();
+    final extension = fileName.split('.').last.toLowerCase();
 
     return extension == 'pdf' ? 'PDF' : 'Image';
   }
 
   Widget _buildHealthRecordCard(
-      Map<String, dynamic> record,
-      ) {
-    final status = (record['status'] ??
-        record['healthStatus'] ??
-        'Recorded')
-        .toString();
+    Map<String, dynamic> record,
+  ) {
+    final status =
+        (record['status'] ?? record['healthStatus'] ?? 'Recorded').toString();
 
-    final condition =
-    (record['condition'] ?? 'Health Checkup').toString();
+    final condition = (record['condition'] ?? 'Health Checkup').toString();
 
-    final temperature =
-    (record['temperature'] ?? '').toString();
+    final temperature = (record['temperature'] ?? '').toString();
 
     final notes = (record['notes'] ?? '').toString();
 
     final date = _formatDate(
-      record['date'] ??
-          record['checkupDate'] ??
-          record['createdAt'],
+      record['date'] ?? record['checkupDate'] ?? record['createdAt'],
     );
 
     final color = _statusColor(status);
@@ -1438,8 +1399,7 @@ class _HealthScreenState extends State<HealthScreen> {
         ),
       ),
       child: Column(
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -1448,8 +1408,7 @@ class _HealthScreenState extends State<HealthScreen> {
                 height: 45,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
-                  borderRadius:
-                  BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.medical_services_outlined,
@@ -1459,8 +1418,7 @@ class _HealthScreenState extends State<HealthScreen> {
               const SizedBox(width: 13),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       condition,
@@ -1519,30 +1477,25 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildVaccinationCard(
-      Map<String, dynamic> record,
-      ) {
+    Map<String, dynamic> record,
+  ) {
     final vaccine = (record['vaccine'] ??
-        record['vaccineName'] ??
-        record['name'] ??
-        'Vaccination')
+            record['vaccineName'] ??
+            record['name'] ??
+            'Vaccination')
         .toString();
 
-    final status = (record['status'] ??
-        record['vaccinationStatus'] ??
-        'Recorded')
-        .toString();
+    final status =
+        (record['status'] ?? record['vaccinationStatus'] ?? 'Recorded')
+            .toString();
 
     final date = _formatDate(
-      record['date'] ??
-          record['vaccinationDate'] ??
-          record['createdAt'],
+      record['date'] ?? record['vaccinationDate'] ?? record['createdAt'],
     );
 
     final completed = status.toLowerCase() == 'completed';
 
-    final color = completed
-        ? const Color(0xFF4CAF50)
-        : const Color(0xFFFF9800);
+    final color = completed ? const Color(0xFF4CAF50) : const Color(0xFFFF9800);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -1564,17 +1517,14 @@ class _HealthScreenState extends State<HealthScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              completed
-                  ? Icons.check
-                  : Icons.vaccines_outlined,
+              completed ? Icons.check : Icons.vaccines_outlined,
               color: color,
             ),
           ),
           const SizedBox(width: 13),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   vaccine,
@@ -1600,19 +1550,15 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildHealthReportCard(
-      Map<String, dynamic> report,
-      ) {
-    final fileName =
-    (report['fileName'] ?? 'Health Report').toString();
+    Map<String, dynamic> report,
+  ) {
+    final fileName = (report['fileName'] ?? 'Health Report').toString();
 
-    final fileType =
-    (report['fileType'] ?? 'File').toString();
+    final fileType = (report['fileType'] ?? 'File').toString();
 
-    final uploadedAt =
-    _formatDate(report['uploadedAt']);
+    final uploadedAt = _formatDate(report['uploadedAt']);
 
-    final isPdf =
-        fileType.toLowerCase() == 'pdf';
+    final isPdf = fileType.toLowerCase() == 'pdf';
 
     return Container(
       width: double.infinity,
@@ -1635,17 +1581,14 @@ class _HealthScreenState extends State<HealthScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              isPdf
-                  ? Icons.picture_as_pdf
-                  : Icons.image_outlined,
+              isPdf ? Icons.picture_as_pdf : Icons.image_outlined,
               color: const Color(0xFFF45170),
             ),
           ),
           const SizedBox(width: 13),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   fileName,
@@ -1677,19 +1620,15 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildVaccinationReportCard(
-      Map<String, dynamic> report,
-      ) {
-    final fileName =
-    (report['fileName'] ?? 'Vaccination Report').toString();
+    Map<String, dynamic> report,
+  ) {
+    final fileName = (report['fileName'] ?? 'Vaccination Report').toString();
 
-    final fileType =
-    (report['fileType'] ?? 'File').toString();
+    final fileType = (report['fileType'] ?? 'File').toString();
 
-    final uploadedAt =
-    _formatDate(report['uploadedAt']);
+    final uploadedAt = _formatDate(report['uploadedAt']);
 
-    final isPdf =
-        fileType.toLowerCase() == 'pdf';
+    final isPdf = fileType.toLowerCase() == 'pdf';
 
     return Container(
       width: double.infinity,
@@ -1712,17 +1651,14 @@ class _HealthScreenState extends State<HealthScreen> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              isPdf
-                  ? Icons.picture_as_pdf
-                  : Icons.vaccines_outlined,
+              isPdf ? Icons.picture_as_pdf : Icons.vaccines_outlined,
               color: const Color(0xFF29266F),
             ),
           ),
           const SizedBox(width: 13),
           Expanded(
             child: Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   fileName,
@@ -1799,16 +1735,15 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildHealthRow(
-      String title,
-      String value,
-      ) {
+    String title,
+    String value,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         vertical: 4,
       ),
       child: Row(
-        mainAxisAlignment:
-        MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
@@ -1839,8 +1774,7 @@ class _HealthScreenState extends State<HealthScreen> {
       latestStatus,
     );
 
-    final localizedLatestStatus =
-    _localizedStatus(latestStatus);
+    final localizedLatestStatus = _localizedStatus(latestStatus);
 
     return Scaffold(
       backgroundColor: const Color(0xFFFFFBF8),
@@ -1859,443 +1793,405 @@ class _HealthScreenState extends State<HealthScreen> {
       ),
       body: isLoading
           ? const Center(
-        child: CircularProgressIndicator(
-          color: Color(0xFFF45170),
-        ),
-      )
+              child: CircularProgressIndicator(
+                color: Color(0xFFF45170),
+              ),
+            )
           : RefreshIndicator(
-        color: const Color(0xFFF45170),
-        onRefresh: _loadHealthData,
-        child: SingleChildScrollView(
-          physics:
-          const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: double.infinity,
+              color: const Color(0xFFF45170),
+              onRefresh: _loadHealthData,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius:
-                  BorderRadius.circular(15),
-                  border: Border.all(
-                    color: Colors.grey.shade200,
-                  ),
-                ),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const CircleAvatar(
-                      radius: 25,
-                      backgroundColor:
-                      Color(0xFFFFE1E7),
-                      child: Icon(
-                        Icons.child_care,
-                        color: Color(0xFFF45170),
-                        size: 30,
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Color(0xFFFFE1E7),
+                            child: Icon(
+                              Icons.child_care,
+                              color: Color(0xFFF45170),
+                              size: 30,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _t(
+                                    context,
+                                    'Health Record',
+                                    'आरोग्य नोंद',
+                                    'स्वास्थ्य रिकॉर्ड',
+                                  ),
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  widget.childName,
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    const SizedBox(height: 22),
+                    Text(
+                      _t(
+                        context,
+                        'Health Status',
+                        'आरोग्य स्थिती',
+                        'स्वास्थ्य स्थिति',
+                      ),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: statusBackground,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Row(
                         children: [
-                          Text(
+                          Icon(
+                            latestStatus.toLowerCase() == 'healthy'
+                                ? Icons.check_circle
+                                : Icons.health_and_safety,
+                            color: statusColor,
+                            size: 30,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  localizedLatestStatus,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: statusColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 3),
+                                Text(
+                                  healthRecords.isEmpty
+                                      ? _t(
+                                          context,
+                                          'No health record added yet',
+                                          'अजून आरोग्याची नोंद जोडलेली नाही',
+                                          'अभी तक कोई स्वास्थ्य रिकॉर्ड नहीं जोड़ा गया',
+                                        )
+                                      : _t(
+                                          context,
+                                          'Latest health record',
+                                          'नवीनतम आरोग्य नोंद',
+                                          'नवीनतम स्वास्थ्य रिकॉर्ड',
+                                        ),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: statusColor.withValues(
+                                      alpha: 0.75,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
                             _t(
                               context,
-                              'Health Record',
-                              'आरोग्य नोंद',
-                              'स्वास्थ्य रिकॉर्ड',
+                              'Recent Health Checkup',
+                              'अलीकडील आरोग्य तपासणी',
+                              'हाल की स्वास्थ्य जाँच',
                             ),
                             style: const TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 3),
-                          Text(
-                            widget.childName,
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight:
-                              FontWeight.bold,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: _addHealthRecord,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF45170),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 9,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                        ],
+                          icon: const Icon(
+                            Icons.add,
+                            size: 18,
+                          ),
+                          label: Text(
+                            _t(
+                              context,
+                              'Add',
+                              'जोडा',
+                              'जोड़ें',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (healthRecords.isEmpty)
+                      _buildEmptyCard(
+                        icon: Icons.medical_information_outlined,
+                        title: _t(
+                          context,
+                          'No Health Records',
+                          'आरोग्याच्या नोंदी नाहीत',
+                          'कोई स्वास्थ्य रिकॉर्ड नहीं',
+                        ),
+                        message: _t(
+                          context,
+                          'Tap Add to create the child health record.',
+                          'मुलाची आरोग्य नोंद तयार करण्यासाठी जोडा वर टॅप करा.',
+                          'बच्चे का स्वास्थ्य रिकॉर्ड बनाने के लिए जोड़ें पर टैप करें।',
+                        ),
+                      )
+                    else
+                      ...healthRecords.map(
+                        (record) => _buildHealthRecordCard(record),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 22),
-              Text(
-                _t(
-                  context,
-                  'Health Status',
-                  'आरोग्य स्थिती',
-                  'स्वास्थ्य स्थिति',
-                ),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: statusBackground,
-                  borderRadius:
-                  BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      latestStatus.toLowerCase() ==
-                          'healthy'
-                          ? Icons.check_circle
-                          : Icons.health_and_safety,
-                      color: statusColor,
-                      size: 30,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            localizedLatestStatus,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight:
-                              FontWeight.bold,
-                              color: statusColor,
+                    const SizedBox(height: 22),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _t(
+                              context,
+                              'Health Reports',
+                              'आरोग्य अहवाल',
+                              'स्वास्थ्य रिपोर्ट',
+                            ),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 3),
-                          Text(
-                            healthRecords.isEmpty
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: isUploadingReport
+                              ? null
+                              : _showHealthReportOptions,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF45170),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 9,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          icon: isUploadingReport
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.upload_file,
+                                  size: 18,
+                                ),
+                          label: Text(
+                            isUploadingReport
                                 ? _t(
-                              context,
-                              'No health record added yet',
-                              'अजून आरोग्याची नोंद जोडलेली नाही',
-                              'अभी तक कोई स्वास्थ्य रिकॉर्ड नहीं जोड़ा गया',
-                            )
+                                    context,
+                                    'Uploading',
+                                    'अपलोड होत आहे',
+                                    'अपलोड हो रहा है',
+                                  )
                                 : _t(
+                                    context,
+                                    'Upload',
+                                    'अपलोड',
+                                    'अपलोड',
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (healthReports.isEmpty)
+                      _buildEmptyCard(
+                        icon: Icons.description_outlined,
+                        title: _t(
+                          context,
+                          'No Reports Uploaded',
+                          'अहवाल अपलोड केलेले नाहीत',
+                          'कोई रिपोर्ट अपलोड नहीं हुई',
+                        ),
+                        message: _t(
+                          context,
+                          'Upload a health report using Camera, Gallery, or File.',
+                          'कॅमेरा, गॅलरी किंवा फाइल वापरून आरोग्य अहवाल अपलोड करा.',
+                          'कैमरा, गैलरी या फ़ाइल का उपयोग करके स्वास्थ्य रिपोर्ट अपलोड करें।',
+                        ),
+                      )
+                    else
+                      ...healthReports.map(
+                        (report) => _buildHealthReportCard(report),
+                      ),
+                    const SizedBox(height: 22),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _t(
                               context,
-                              'Latest health record',
-                              'नवीनतम आरोग्य नोंद',
-                              'नवीनतम स्वास्थ्य रिकॉर्ड',
+                              'Vaccination',
+                              'लसीकरण',
+                              'टीकाकरण',
                             ),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: statusColor
-                                  .withValues(
-                                alpha: 0.75,
-                              ),
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: isUploadingVaccinationReport
+                              ? null
+                              : _showVaccinationReportOptions,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF45170),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 9,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          icon: isUploadingVaccinationReport
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.upload_file,
+                                  size: 18,
+                                ),
+                          label: Text(
+                            isUploadingVaccinationReport
+                                ? _t(
+                                    context,
+                                    'Uploading',
+                                    'अपलोड होत आहे',
+                                    'अपलोड हो रहा है',
+                                  )
+                                : _t(
+                                    context,
+                                    'Upload Report',
+                                    'अहवाल अपलोड करा',
+                                    'रिपोर्ट अपलोड करें',
+                                  ),
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 12),
+                    if (vaccinationRecords.isEmpty)
+                      _buildEmptyCard(
+                        icon: Icons.vaccines_outlined,
+                        title: _t(
+                          context,
+                          'No Vaccination Records',
+                          'लसीकरणाच्या नोंदी नाहीत',
+                          'कोई टीकाकरण रिकॉर्ड नहीं',
+                        ),
+                        message: _t(
+                          context,
+                          'Vaccination information will appear here after it is obtained from the child report.',
+                          'मुलाच्या अहवालातून माहिती मिळाल्यानंतर लसीकरणाची माहिती येथे दिसेल.',
+                          'बच्चे की रिपोर्ट से जानकारी मिलने के बाद टीकाकरण की जानकारी यहाँ दिखाई देगी।',
+                        ),
+                      )
+                    else
+                      ...vaccinationRecords.map(
+                        (record) => _buildVaccinationCard(record),
+                      ),
+                    if (vaccinationReports.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        _t(
+                          context,
+                          'Uploaded Vaccination Reports',
+                          'अपलोड केलेले लसीकरण अहवाल',
+                          'अपलोड की गई टीकाकरण रिपोर्ट',
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ...vaccinationReports.map(
+                        (report) => _buildVaccinationReportCard(
+                          report,
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
-              const SizedBox(height: 22),
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      _t(
-                        context,
-                        'Recent Health Checkup',
-                        'अलीकडील आरोग्य तपासणी',
-                        'हाल की स्वास्थ्य जाँच',
-                      ),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: _addHealthRecord,
-                    style:
-                    ElevatedButton.styleFrom(
-                      backgroundColor:
-                      const Color(0xFFF45170),
-                      foregroundColor: Colors.white,
-                      padding:
-                      const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 9,
-                      ),
-                      shape:
-                      RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(10),
-                      ),
-                    ),
-                    icon: const Icon(
-                      Icons.add,
-                      size: 18,
-                    ),
-                    label: Text(
-                      _t(
-                        context,
-                        'Add',
-                        'जोडा',
-                        'जोड़ें',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (healthRecords.isEmpty)
-                _buildEmptyCard(
-                  icon: Icons
-                      .medical_information_outlined,
-                  title: _t(
-                    context,
-                    'No Health Records',
-                    'आरोग्याच्या नोंदी नाहीत',
-                    'कोई स्वास्थ्य रिकॉर्ड नहीं',
-                  ),
-                  message: _t(
-                    context,
-                    'Tap Add to create the child health record.',
-                    'मुलाची आरोग्य नोंद तयार करण्यासाठी जोडा वर टॅप करा.',
-                    'बच्चे का स्वास्थ्य रिकॉर्ड बनाने के लिए जोड़ें पर टैप करें।',
-                  ),
-                )
-              else
-                ...healthRecords.map(
-                      (record) =>
-                      _buildHealthRecordCard(record),
-                ),
-              const SizedBox(height: 22),
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      _t(
-                        context,
-                        'Health Reports',
-                        'आरोग्य अहवाल',
-                        'स्वास्थ्य रिपोर्ट',
-                      ),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: isUploadingReport
-                        ? null
-                        : _showHealthReportOptions,
-                    style:
-                    ElevatedButton.styleFrom(
-                      backgroundColor:
-                      const Color(0xFFF45170),
-                      foregroundColor: Colors.white,
-                      padding:
-                      const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 9,
-                      ),
-                      shape:
-                      RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(10),
-                      ),
-                    ),
-                    icon: isUploadingReport
-                        ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child:
-                      CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                        : const Icon(
-                      Icons.upload_file,
-                      size: 18,
-                    ),
-                    label: Text(
-                      isUploadingReport
-                          ? _t(
-                        context,
-                        'Uploading',
-                        'अपलोड होत आहे',
-                        'अपलोड हो रहा है',
-                      )
-                          : _t(
-                        context,
-                        'Upload',
-                        'अपलोड',
-                        'अपलोड',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (healthReports.isEmpty)
-                _buildEmptyCard(
-                  icon: Icons.description_outlined,
-                  title: _t(
-                    context,
-                    'No Reports Uploaded',
-                    'अहवाल अपलोड केलेले नाहीत',
-                    'कोई रिपोर्ट अपलोड नहीं हुई',
-                  ),
-                  message: _t(
-                    context,
-                    'Upload a health report using Camera, Gallery, or File.',
-                    'कॅमेरा, गॅलरी किंवा फाइल वापरून आरोग्य अहवाल अपलोड करा.',
-                    'कैमरा, गैलरी या फ़ाइल का उपयोग करके स्वास्थ्य रिपोर्ट अपलोड करें।',
-                  ),
-                )
-              else
-                ...healthReports.map(
-                      (report) =>
-                      _buildHealthReportCard(report),
-                ),
-              const SizedBox(height: 22),
-              Row(
-                mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      _t(
-                        context,
-                        'Vaccination',
-                        'लसीकरण',
-                        'टीकाकरण',
-                      ),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed:
-                    isUploadingVaccinationReport
-                        ? null
-                        : _showVaccinationReportOptions,
-                    style:
-                    ElevatedButton.styleFrom(
-                      backgroundColor:
-                      const Color(0xFFF45170),
-                      foregroundColor: Colors.white,
-                      padding:
-                      const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 9,
-                      ),
-                      shape:
-                      RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(10),
-                      ),
-                    ),
-                    icon:
-                    isUploadingVaccinationReport
-                        ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child:
-                      CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                        : const Icon(
-                      Icons.upload_file,
-                      size: 18,
-                    ),
-                    label: Text(
-                      isUploadingVaccinationReport
-                          ? _t(
-                        context,
-                        'Uploading',
-                        'अपलोड होत आहे',
-                        'अपलोड हो रहा है',
-                      )
-                          : _t(
-                        context,
-                        'Upload Report',
-                        'अहवाल अपलोड करा',
-                        'रिपोर्ट अपलोड करें',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              if (vaccinationRecords.isEmpty)
-                _buildEmptyCard(
-                  icon: Icons.vaccines_outlined,
-                  title: _t(
-                    context,
-                    'No Vaccination Records',
-                    'लसीकरणाच्या नोंदी नाहीत',
-                    'कोई टीकाकरण रिकॉर्ड नहीं',
-                  ),
-                  message: _t(
-                    context,
-                    'Vaccination information will appear here after it is obtained from the child report.',
-                    'मुलाच्या अहवालातून माहिती मिळाल्यानंतर लसीकरणाची माहिती येथे दिसेल.',
-                    'बच्चे की रिपोर्ट से जानकारी मिलने के बाद टीकाकरण की जानकारी यहाँ दिखाई देगी।',
-                  ),
-                )
-              else
-                ...vaccinationRecords.map(
-                      (record) =>
-                      _buildVaccinationCard(record),
-                ),
-              if (vaccinationReports.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Text(
-                  _t(
-                    context,
-                    'Uploaded Vaccination Reports',
-                    'अपलोड केलेले लसीकरण अहवाल',
-                    'अपलोड की गई टीकाकरण रिपोर्ट',
-                  ),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ...vaccinationReports.map(
-                      (report) =>
-                      _buildVaccinationReportCard(
-                        report,
-                      ),
-                ),
-              ],
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

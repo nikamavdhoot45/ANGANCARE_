@@ -21,11 +21,11 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   String? errorMessage;
 
   String _tr(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
     final language = Localizations.localeOf(context).languageCode;
 
     if (language == 'mr') {
@@ -40,9 +40,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   }
 
   String _statusText(
-      BuildContext context,
-      String status,
-      ) {
+    BuildContext context,
+    String status,
+  ) {
     switch (status.toLowerCase()) {
       case 'normal':
         return _tr(
@@ -74,9 +74,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   }
 
   String _genderText(
-      BuildContext context,
-      String gender,
-      ) {
+    BuildContext context,
+    String gender,
+  ) {
     switch (gender.toLowerCase()) {
       case 'male':
         return _tr(
@@ -121,9 +121,9 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
       final snapshot = await _firestore
           .collection('children')
           .orderBy(
-        'createdAt',
-        descending: true,
-      )
+            'createdAt',
+            descending: true,
+          )
           .get();
 
       final data = snapshot.docs.map((doc) {
@@ -170,8 +170,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
         filteredChildren = children.where((child) {
           final name = (child['name'] ?? '').toString().toLowerCase();
 
-          final gender =
-          (child['gender'] ?? '').toString().toLowerCase();
+          final gender = (child['gender'] ?? '').toString().toLowerCase();
 
           final status = _getChildStatus(child).toLowerCase();
 
@@ -188,19 +187,17 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   // =========================
 
   String _getChildStatus(
-      Map<String, dynamic> child,
-      ) {
+    Map<String, dynamic> child,
+  ) {
     final growthStatus = child['growthStatus'];
 
-    if (growthStatus != null &&
-        growthStatus.toString().trim().isNotEmpty) {
+    if (growthStatus != null && growthStatus.toString().trim().isNotEmpty) {
       return growthStatus.toString();
     }
 
     final healthStatus = child['healthStatus'];
 
-    if (healthStatus != null &&
-        healthStatus.toString().trim().isNotEmpty) {
+    if (healthStatus != null && healthStatus.toString().trim().isNotEmpty) {
       return healthStatus.toString();
     }
 
@@ -212,8 +209,8 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   // =========================
 
   Future<void> _editChild(
-      Map<String, dynamic> child,
-      ) async {
+    Map<String, dynamic> child,
+  ) async {
     final childId = child['id'];
 
     if (childId == null) {
@@ -240,8 +237,8 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   // =========================
 
   Future<void> _deleteChild(
-      Map<String, dynamic> child,
-      ) async {
+    Map<String, dynamic> child,
+  ) async {
     final childId = child['id'];
 
     if (childId == null) {
@@ -318,11 +315,11 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
 
     try {
       final childReference =
-      _firestore.collection('children').doc(childId.toString());
+          _firestore.collection('children').doc(childId.toString());
 
       // Delete growth records.
       final growthRecords =
-      await childReference.collection('growthRecords').get();
+          await childReference.collection('growthRecords').get();
 
       for (final record in growthRecords.docs) {
         await record.reference.delete();
@@ -330,7 +327,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
 
       // Delete nutrition records.
       final nutritionRecords =
-      await childReference.collection('nutritionRecords').get();
+          await childReference.collection('nutritionRecords').get();
 
       for (final record in nutritionRecords.docs) {
         await record.reference.delete();
@@ -338,7 +335,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
 
       // Delete vaccination records.
       final vaccinationRecords =
-      await childReference.collection('vaccinationRecords').get();
+          await childReference.collection('vaccinationRecords').get();
 
       for (final record in vaccinationRecords.docs) {
         await record.reference.delete();
@@ -346,7 +343,7 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
 
       // Delete health records.
       final healthRecords =
-      await childReference.collection('healthRecords').get();
+          await childReference.collection('healthRecords').get();
 
       for (final record in healthRecords.docs) {
         await record.reference.delete();
@@ -399,8 +396,8 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   // =========================
 
   Color _getStatusColor(
-      String status,
-      ) {
+    String status,
+  ) {
     switch (status.toLowerCase()) {
       case 'normal':
         return const Color(
@@ -427,8 +424,8 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   // =========================
 
   IconData _getGenderIcon(
-      String gender,
-      ) {
+    String gender,
+  ) {
     if (gender.toLowerCase() == 'female') {
       return Icons.girl;
     }
@@ -483,34 +480,34 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
           Expanded(
             child: isLoading
                 ? const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFFF45170),
-              ),
-            )
+                    child: CircularProgressIndicator(
+                      color: Color(0xFFF45170),
+                    ),
+                  )
                 : errorMessage != null
-                ? _errorState()
-                : filteredChildren.isEmpty
-                ? _emptyState()
-                : RefreshIndicator(
-              color: const Color(0xFFF45170),
-              onRefresh: _loadChildren,
-              child: ListView.builder(
-                padding: const EdgeInsets.fromLTRB(
-                  16,
-                  5,
-                  16,
-                  20,
-                ),
-                itemCount: filteredChildren.length,
-                itemBuilder: (context, index) {
-                  final child = filteredChildren[index];
+                    ? _errorState()
+                    : filteredChildren.isEmpty
+                        ? _emptyState()
+                        : RefreshIndicator(
+                            color: const Color(0xFFF45170),
+                            onRefresh: _loadChildren,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.fromLTRB(
+                                16,
+                                5,
+                                16,
+                                20,
+                              ),
+                              itemCount: filteredChildren.length,
+                              itemBuilder: (context, index) {
+                                final child = filteredChildren[index];
 
-                  return _childCard(
-                    child,
-                  );
-                },
-              ),
-            ),
+                                return _childCard(
+                                  child,
+                                );
+                              },
+                            ),
+                          ),
           ),
         ],
       ),
@@ -522,25 +519,19 @@ class _ChildrenScreenState extends State<ChildrenScreen> {
   // =========================
 
   Widget _childCard(
-      Map<String, dynamic> child,
-      ) {
-    final String name =
-    (child['name'] ?? 'Unknown').toString();
+    Map<String, dynamic> child,
+  ) {
+    final String name = (child['name'] ?? 'Unknown').toString();
 
-    final String age =
-    (child['age'] ?? 0).toString();
+    final String age = (child['age'] ?? 0).toString();
 
-    final String gender =
-    (child['gender'] ?? 'Unknown').toString();
+    final String gender = (child['gender'] ?? 'Unknown').toString();
 
-    final String status =
-    _getChildStatus(child);
+    final String status = _getChildStatus(child);
 
-    final statusColor =
-    _getStatusColor(status);
+    final statusColor = _getStatusColor(status);
 
-    final String childId =
-    (child['id'] ?? '').toString();
+    final String childId = (child['id'] ?? '').toString();
 
     return Card(
       margin: const EdgeInsets.only(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../localization/app_localizations.dart';
+import '../../../core/localization/app_localizations.dart';
 
 class NutritionScreen extends StatelessWidget {
   final String childName;
@@ -11,13 +11,12 @@ class NutritionScreen extends StatelessWidget {
   });
 
   String _t(
-      BuildContext context,
-      String english,
-      String marathi,
-      String hindi,
-      ) {
-    final languageCode =
-        AppLocalizations.of(context).locale.languageCode;
+    BuildContext context,
+    String english,
+    String marathi,
+    String hindi,
+  ) {
+    final languageCode = AppLocalizations.of(context).locale.languageCode;
 
     if (languageCode == 'mr') return marathi;
     if (languageCode == 'hi') return hindi;
@@ -28,7 +27,6 @@ class NutritionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFFFBF8),
-
       appBar: AppBar(
         title: Text(
           _t(
@@ -42,17 +40,14 @@ class NutritionScreen extends StatelessWidget {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
-
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
@@ -60,7 +55,6 @@ class NutritionScreen extends StatelessWidget {
                   color: Colors.grey.shade200,
                 ),
               ),
-
               child: Row(
                 children: [
                   const CircleAvatar(
@@ -72,9 +66,7 @@ class NutritionScreen extends StatelessWidget {
                       size: 28,
                     ),
                   ),
-
                   const SizedBox(width: 12),
-
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -90,9 +82,7 @@ class NutritionScreen extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-
                       const SizedBox(height: 3),
-
                       Text(
                         childName,
                         style: const TextStyle(
@@ -105,9 +95,7 @@ class NutritionScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 22),
-
             Text(
               _t(
                 context,
@@ -120,9 +108,7 @@ class NutritionScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 12),
-
             Row(
               children: [
                 Expanded(
@@ -138,9 +124,7 @@ class NutritionScreen extends StatelessWidget {
                     unit: 'kcal',
                   ),
                 ),
-
                 const SizedBox(width: 12),
-
                 Expanded(
                   child: _buildNutritionCard(
                     icon: Icons.water_drop_outlined,
@@ -161,9 +145,7 @@ class NutritionScreen extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 22),
-
             Text(
               _t(
                 context,
@@ -176,9 +158,7 @@ class NutritionScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 12),
-
             _buildMealCard(
               icon: Icons.free_breakfast_outlined,
               meal: _t(
@@ -195,9 +175,7 @@ class NutritionScreen extends StatelessWidget {
               ),
               time: '8:00 AM',
             ),
-
             const SizedBox(height: 10),
-
             _buildMealCard(
               icon: Icons.lunch_dining_outlined,
               meal: _t(
@@ -214,9 +192,7 @@ class NutritionScreen extends StatelessWidget {
               ),
               time: '1:00 PM',
             ),
-
             const SizedBox(height: 10),
-
             _buildMealCard(
               icon: Icons.cookie_outlined,
               meal: _t(
@@ -233,9 +209,7 @@ class NutritionScreen extends StatelessWidget {
               ),
               time: '4:30 PM',
             ),
-
             const SizedBox(height: 10),
-
             _buildMealCard(
               icon: Icons.dinner_dining_outlined,
               meal: _t(
@@ -252,9 +226,7 @@ class NutritionScreen extends StatelessWidget {
               ),
               time: '8:00 PM',
             ),
-
             const SizedBox(height: 22),
-
             Text(
               _t(
                 context,
@@ -267,18 +239,14 @@ class NutritionScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 12),
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
-
               decoration: BoxDecoration(
                 color: const Color(0xFFFFF3E0),
                 borderRadius: BorderRadius.circular(15),
               ),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -294,9 +262,7 @@ class NutritionScreen extends StatelessWidget {
                       fontSize: 15,
                     ),
                   ),
-
                   const SizedBox(height: 10),
-
                   Text(
                     _t(
                       context,
@@ -308,9 +274,7 @@ class NutritionScreen extends StatelessWidget {
                       fontSize: 13,
                     ),
                   ),
-
                   const SizedBox(height: 6),
-
                   Text(
                     _t(
                       context,
@@ -322,9 +286,7 @@ class NutritionScreen extends StatelessWidget {
                       fontSize: 13,
                     ),
                   ),
-
                   const SizedBox(height: 6),
-
                   Text(
                     _t(
                       context,
@@ -353,7 +315,6 @@ class NutritionScreen extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -361,7 +322,6 @@ class NutritionScreen extends StatelessWidget {
           color: Colors.grey.shade200,
         ),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -370,9 +330,7 @@ class NutritionScreen extends StatelessWidget {
             color: const Color(0xFFF45170),
             size: 27,
           ),
-
           const SizedBox(height: 10),
-
           Text(
             title,
             style: const TextStyle(
@@ -380,9 +338,7 @@ class NutritionScreen extends StatelessWidget {
               fontSize: 12,
             ),
           ),
-
           const SizedBox(height: 4),
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -393,9 +349,7 @@ class NutritionScreen extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-
               const SizedBox(width: 4),
-
               Padding(
                 padding: const EdgeInsets.only(bottom: 2),
                 child: Text(
@@ -421,7 +375,6 @@ class NutritionScreen extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.all(15),
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -429,26 +382,21 @@ class NutritionScreen extends StatelessWidget {
           color: Colors.grey.shade200,
         ),
       ),
-
       child: Row(
         children: [
           Container(
             width: 45,
             height: 45,
-
             decoration: BoxDecoration(
               color: const Color(0xFFFFE1E7),
               borderRadius: BorderRadius.circular(12),
             ),
-
             child: Icon(
               icon,
               color: const Color(0xFFF45170),
             ),
           ),
-
           const SizedBox(width: 13),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,9 +408,7 @@ class NutritionScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 const SizedBox(height: 4),
-
                 Text(
                   food,
                   style: const TextStyle(
@@ -473,7 +419,6 @@ class NutritionScreen extends StatelessWidget {
               ],
             ),
           ),
-
           Text(
             time,
             style: const TextStyle(
